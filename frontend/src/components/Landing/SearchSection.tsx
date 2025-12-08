@@ -1,20 +1,24 @@
+// In SearchSection.tsx or wherever this component is
 import { useState, useRef } from 'react';
 import { Search, UploadCloud, Loader2, AlertCircle, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useFrappePostCall } from 'frappe-react-sdk';
 
 const SearchSection = () => {
     const [query, setQuery] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [uploadLoading, setUploadLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
+
+    const { call: analyzePrescription } = useFrappePostCall('genmedai.api.analyze_prescription');
 
     const handleSearch = () => {
         if (!query.trim()) return;
         setLoading(true);
         setError('');
 
-        // Simulate a small delay for better UX or just strict navigation
         setTimeout(() => {
             setLoading(false);
             navigate(`/search?query=${encodeURIComponent(query)}`);
@@ -25,21 +29,41 @@ const SearchSection = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        setLoading(true);
+        // Reset file input so same file can be selected again if needed
+        e.target.value = '';
+
+        setUploadLoading(true);
         setError('');
 
-        // For now, we'll mock the prescription analysis or redirect to a page that handles it.
-        // Since the backend 'analyzePrescription' isn't explicitly set up in this context yet, 
-        // we'll simulate a process or show an alert, or if you have a route for it.
-        // Let's assume we want to eventually support this. 
-
-        setTimeout(() => {
-            setLoading(false);
-            alert("Prescription upload analysis feature coming soon! Please search by name for now.");
-            // In a real implementation:
-            // const reader = new FileReader();
-            // reader.readAsDataURL(file); ... -> send to backend -> get salts -> navigate to results
-        }, 1500);
+        try {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                const base64 = reader.result as string;
+                try {
+                    const result = await analyzePrescription({ image_base64: base64 });
+                    if (result?.message && Array.isArray(result.message) && result.message.length > 0) {
+                        // Found medicines! Search for the first one for now
+                        // Ideally we could pass list, but let's start with first match
+                        const firstMed = result.message[0];
+                        navigate(`/search?query=${encodeURIComponent(firstMed)}`);
+                    } else {
+                        setError("Could not identify any clear medicine names in the image. Please try typing manually.");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    setError("Failed to analyze prescription. Please try again.");
+                } finally {
+                    setUploadLoading(false);
+                }
+            };
+            reader.onerror = () => {
+                setError("Failed to read file.");
+                setUploadLoading(false);
+            };
+        } catch (err) {
+            setUploadLoading(false);
+        }
     };
 
     return (
@@ -89,7 +113,11 @@ const SearchSection = () => {
                                     onChange={handleFileUpload}
                                 />
                                 <div className="w-12 h-12 bg-white dark:bg-gray-700 rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                    <UploadCloud className="text-brand-blue w-6 h-6" />
+                                    {uploadLoading ? (
+                                        <Loader2 className="animate-spin text-brand-blue w-6 h-6" />
+                                    ) : (
+                                        <UploadCloud className="text-brand-blue w-6 h-6" />
+                                    )}
                                 </div>
                                 <p className="text-gray-900 dark:text-white font-bold">Click to Upload Prescription</p>
                                 <p className="text-sm text-gray-400 mt-1">JPG, PNG, PDF supported</p>

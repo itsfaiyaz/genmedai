@@ -55,11 +55,16 @@ const Search = () => {
                 price: `₹${item.price} `,
                 type: item.dosage_form,
                 salt_composition: item.salt_composition,
+                short_composition1: item.short_composition1,
+                short_composition2: item.short_composition2,
                 is_ai_generated: item.is_ai_generated,
                 substitutes: "View",
                 original_price: item.price,
                 explanation: item.explanation,
-                affiliate_link: item.affiliate_link
+                affiliate_link: item.affiliate_link,
+                is_discontinued: item.is_discontinued,
+                pack_size_label: item.pack_size_label,
+                is_generic: item.is_generic
             }));
             setResults(mappedResults);
         } else {
@@ -119,7 +124,7 @@ const Search = () => {
                     </p>
                 </div>
 
-                <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto group">
+                <form onSubmit={handleSearch} className="relative max-w-3xl mx-auto group">
                     <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
                         <SearchIcon className="h-6 w-6 text-gray-400 group-focus-within:text-brand-teal transition-colors" />
                     </div>
@@ -128,15 +133,25 @@ const Search = () => {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search for a medicine (e.g. Dolo, Pan D)..."
-                        className="block w-full pl-14 pr-16 py-6 bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-full text-xl shadow-lg hover:shadow-xl focus:ring-4 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all"
+                        className="block w-full pl-14 pr-48 py-6 bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 rounded-full text-xl shadow-lg hover:shadow-xl focus:ring-4 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all"
                         autoFocus
                     />
                     <button
                         type="submit"
-                        className="absolute inset-y-2 right-2 px-6 bg-brand-gradient text-white rounded-full font-semibold shadow-md hover:shadow-lg hover:opacity-90 transition-all flex items-center gap-2 group-hover:scale-105"
+                        disabled={isLoading}
+                        className={`absolute inset-y-2 right-2 px-6 bg-brand-gradient text-white rounded-full font-semibold shadow-md transition-all flex items-center gap-2 ${isLoading ? 'opacity-80 cursor-wait' : 'hover:shadow-lg hover:opacity-90 group-hover:scale-105'}`}
                     >
-                        <Sparkles className="w-4 h-4 fill-white/20" />
-                        AI Search
+                        {isLoading ? (
+                            <div className="flex items-center gap-2">
+                                <Sparkles className="w-4 h-4 animate-spin" />
+                                <span className="animate-pulse">AI Thinking...</span>
+                            </div>
+                        ) : (
+                            <>
+                                <Sparkles className="w-4 h-4 fill-white/20" />
+                                AI Search
+                            </>
+                        )}
                     </button>
                 </form>
 
@@ -194,9 +209,25 @@ const Search = () => {
                                                         <Pill className="w-6 h-6" />
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">{medicine.name}</h3>
-                                                        <p className="text-sm text-gray-500 dark:text-gray-400">{medicine.manufacturer} • {medicine.type}</p>
-                                                        <p className="text-xs text-gray-400 mt-1">{medicine.salt_composition || "Composition not available"}</p>
+                                                        <div className="flex items-center gap-2">
+                                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">{medicine.name}</h3>
+                                                            {medicine.is_discontinued === 1 && (
+                                                                <span className="px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-600 border border-red-200">
+                                                                    DISCONTINUED
+                                                                </span>
+                                                            )}
+                                                            {medicine.is_generic === 1 && (
+                                                                <span className="px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-600 border border-green-200">
+                                                                    Generic
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                            {medicine.manufacturer} • {medicine.type} {medicine.pack_size_label ? `• ${medicine.pack_size_label}` : ''}
+                                                        </p>
+                                                        <p className="text-xs text-gray-400 mt-1">
+                                                            {medicine.salt_composition || "Composition not available"}
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col items-end gap-2">
@@ -362,8 +393,13 @@ const Search = () => {
                                                 <Pill className="w-5 h-5" />
                                             </div>
                                             <div>
-                                                <h4 className="font-bold text-gray-900 dark:text-white">{sub.brand_name} {sub.strength}</h4>
-                                                <p className="text-xs text-gray-500">{sub.manufacturer}</p>
+                                                <div className="flex items-center gap-2">
+                                                    <h4 className="font-bold text-gray-900 dark:text-white">{sub.brand_name} {sub.strength}</h4>
+                                                    {sub.is_discontinued === 1 && <span className="text-[10px] bg-red-100 text-red-600 px-1 py-0.5 rounded border border-red-200">DISCONTINUED</span>}
+                                                </div>
+                                                <p className="text-xs text-gray-500">
+                                                    {sub.manufacturer} {sub.pack_size_label ? ` • ${sub.pack_size_label}` : ''} {sub.is_generic ? ' • Generic' : ''}
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="text-right">

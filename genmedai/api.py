@@ -64,17 +64,31 @@ def query_openai(api_key, prompt):
         frappe.log_error(message=f"OpenAI API Error: {str(e)}", title="GenMedAI OpenAI Error")
         return None
 
-def query_gemini_internal(api_key, prompt):
+def query_gemini_internal(api_key, prompt, image_base64=None):
     headers = {"Content-Type": "application/json"}
+    
+    parts = [{"text": prompt}]
+    
+    if image_base64:
+        # Depending on format, clean header if present (e.g. data:image/jpeg;base64,)
+        if "," in image_base64:
+            image_base64 = image_base64.split(",")[1]
+            
+        parts.append({
+            "inline_data": {
+                "mime_type": "image/jpeg", # Assuming JPEG or generic image
+                "data": image_base64
+            }
+        })
+        
     payload = {
         "contents": [{
-            "parts": [{"text": prompt}]
+            "parts": parts
         }]
     }
     
     try:
         url = f"{GEMINI_API_URL}?key={api_key}"
-        # print to debug log? No, keep it clean.
         response = requests.post(url, headers=headers, json=payload, timeout=30)
         
         if response.status_code != 200:
@@ -86,6 +100,37 @@ def query_gemini_internal(api_key, prompt):
     except Exception as e:
         frappe.log_error(message=f"Gemini API Error: {str(e)}", title="GenMedAI Gemini Error")
         return None
+
+@frappe.whitelist(allow_guest=True)
+def analyze_prescription(image_base64):
+    if not image_base64:
+        frappe.throw("No image data provided")
+        
+    prompt = """
+    Analyze this prescription image. Identify the medicines prescribed.
+    Return strictly a JSON LIST of strings, where each string is a medicine name.
+    Example: ["Dolo 650", "Augmentin 625"]
+    If no medicines are clearly visible, return an empty list [].
+    """
+    
+    provider, api_key = get_ai_config()
+    if provider != "Google Gemini":
+        # Force fallback or error if OpenAI (vision support varies, simplified here for Gemini default)
+        # For now, let's assume Gemini is used or switch key if available
+        pass
+        
+    result = query_gemini_internal(api_key, prompt, image_base64)
+    
+    if result:
+        try:
+            start_index = result.find('[')
+            end_index = result.rfind(']')
+            if start_index != -1 and end_index != -1:
+                return json.loads(result[start_index:end_index+1])
+        except:
+            pass
+            
+    return []
 
 @frappe.whitelist(allow_guest=True)
 def register_user(email, full_name, mobile_no, gender, redirect_to=None):
@@ -128,20 +173,34 @@ def get_medicines(query=None):
     frappe.log_error(f"GenMedAI Search Query: {query}", "GenMedAI Search")
     
     # 1. Search Local Database
-    # specific filters for brand_name, salt_composition, manufacturer
+    # specific filters for brand_name, salt_composition, manufacturer_name
     or_filters = {
         "brand_name": ["like", f"%{query}%"],
         "salt_composition": ["like", f"%{query}%"],
-        "manufacturer": ["like", f"%{query}%"]
+        "short_composition1": ["like", f"%{query}%"],
+        "short_composition2": ["like", f"%{query}%"],
+        "manufacturer_name": ["like", f"%{query}%"]
     }
     
     local_results = frappe.get_list(
         "Medicine",
-        fields=["name", "brand_name", "salt_composition", "strength", "dosage_form", "manufacturer", "price", "is_generic", "image"],
+        fields=[
+            "name", "brand_name", "salt_composition", "short_composition1", "short_composition2",
+            "strength", "dosage_form", "manufacturer_name", "type", 
+            "price", "is_generic", "image", "is_discontinued", "pack_size_label"
+        ],
         or_filters=or_filters,
         limit_page_length=20,
         ignore_permissions=True
     )
+    
+    # Map fields for frontend compatibility
+    for r in local_results:
+        r['manufacturer'] = r.get('manufacturer_name')
+        if not r.get('dosage_form') and r.get('type'):
+            r['dosage_form'] = r['type']
+        # Ensure boolean for is_discontinued
+        r['is_discontinued'] = 1 if r.get('is_discontinued') else 0
     
     # 2. AI Fallback / Augmentation
     # We ask AI to identify the medicine and provide details
@@ -161,9 +220,11 @@ def get_medicines(query=None):
         "salt_composition": "Active Ingredients",
         "strength": "e.g. 500mg",
         "dosage_form": "Tablet/Capsule/Syrup",
+        "pack_size_label": "e.g. 10 Tablet Strip",
         "manufacturer": "Company Name",
         "price": 100.00,
         "is_generic": false,
+        "is_discontinued": false,
         "image": null,
         "explanation": "A detailed explanation (3-4 sentences) of what this medicine is, its primary uses, how it works, and key precautions.",
         "affiliate_link": "https://www.1mg.com/search/all?name={query}" 
@@ -254,11 +315,18 @@ def get_substitutes(medicine_id=None, salt_composition=None, current_price=None)
 
     substitutes = frappe.get_list(
         "Medicine",
-        fields=["name", "brand_name", "salt_composition", "strength", "dosage_form", "manufacturer", "price", "is_generic", "image"],
+        fields=["name", "brand_name", "salt_composition", "strength", "dosage_form", "manufacturer_name", "type", "price", "is_generic", "image", "pack_size_label", "is_discontinued"],
         filters=filters,
         order_by="price asc",
         limit_page_length=10
     )
+    
+    # Map fields for frontend compatibility
+    for sub in substitutes:
+        sub['manufacturer'] = sub.get('manufacturer_name')
+        if not sub.get('dosage_form') and sub.get('type'):
+            sub['dosage_form'] = sub.get('type')
+        sub['is_discontinued'] = 1 if sub.get('is_discontinued') else 0
 
     if not substitutes:
         # AI Fallback for Substitutes

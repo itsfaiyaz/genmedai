@@ -1,57 +1,100 @@
 {
     "actions": [],
-    "autoname": "format:{brand_name} {strength}",
+    "allow_import": 1,
+    "autoname": "field:brand_name",
     "creation": "2024-12-08 16:35:00.000000",
     "doctype": "DocType",
     "engine": "InnoDB",
     "field_order": [
+        "source_id",
         "brand_name",
+        "type",
+        "is_discontinued",
+        "manufacturer_name",
+        "section_break_details",
         "salt_composition",
+        "short_composition1",
+        "short_composition2",
         "strength",
         "dosage_form",
-        "manufacturer",
+        "pack_size_label",
         "section_break_price",
         "price",
         "is_generic",
-        "section_break_details",
+        "section_break_image",
         "image",
         "description"
     ],
     "fields": [
         {
+            "fieldname": "source_id",
+            "fieldtype": "Data",
+            "hidden": 1,
+            "label": "id",
+            "read_only": 1
+        },
+        {
             "fieldname": "brand_name",
             "fieldtype": "Data",
             "in_list_view": 1,
-            "label": "Brand Name",
+            "label": "name",
             "reqd": 1,
-            "search_index": 1
+            "search_index": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "type",
+            "fieldtype": "Data",
+            "label": "type"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_discontinued",
+            "fieldtype": "Check",
+            "label": "Is_discontinued"
+        },
+        {
+            "fieldname": "manufacturer_name",
+            "fieldtype": "Data",
+            "label": "manufacturer_name"
+        },
+        {
+            "fieldname": "section_break_details",
+            "fieldtype": "Section Break"
         },
         {
             "fieldname": "salt_composition",
             "fieldtype": "Data",
             "in_list_view": 1,
-            "label": "Salt Composition",
-            "reqd": 1,
+            "label": "salt_composition",
             "search_index": 1
+        },
+        {
+            "fieldname": "short_composition1",
+            "fieldtype": "Data",
+            "label": "short_composition1"
+        },
+        {
+            "fieldname": "short_composition2",
+            "fieldtype": "Data",
+            "label": "short_composition2"
         },
         {
             "fieldname": "strength",
             "fieldtype": "Data",
-            "label": "Strength",
-            "reqd": 1,
+            "label": "strength",
             "in_list_view": 1
         },
         {
             "fieldname": "dosage_form",
             "fieldtype": "Select",
-            "label": "Dosage Form",
-            "options": "Tablet\nSyrup\nInjection\nCapsule\nCream\nGel\nDrops\nInhaler\nPowder\nSachet",
-            "reqd": 1
+            "label": "dosage_form",
+            "options": "Tablet\nSyrup\nInjection\nCapsule\nCream\nGel\nDrops\nInhaler\nPowder\nSachet"
         },
         {
-            "fieldname": "manufacturer",
+            "fieldname": "pack_size_label",
             "fieldtype": "Data",
-            "label": "Manufacturer"
+            "label": "pack_size_label"
         },
         {
             "fieldname": "section_break_price",
@@ -60,28 +103,28 @@
         {
             "fieldname": "price",
             "fieldtype": "Currency",
-            "label": "Price (MRP)",
+            "label": "price(₹)",
             "reqd": 1
         },
         {
             "default": "0",
             "fieldname": "is_generic",
             "fieldtype": "Check",
-            "label": "Is Generic?"
+            "label": "is_generic"
         },
         {
-            "fieldname": "section_break_details",
+            "fieldname": "section_break_image",
             "fieldtype": "Section Break"
         },
         {
             "fieldname": "image",
             "fieldtype": "Attach Image",
-            "label": "Medicine Image"
+            "label": "image"
         },
         {
             "fieldname": "description",
             "fieldtype": "Text Editor",
-            "label": "Description"
+            "label": "description"
         }
     ],
     "index_web_pages_for_search": 1,
@@ -90,7 +133,7 @@
     "modified_by": "Administrator",
     "module": "GenMedAI",
     "name": "Medicine",
-    "naming_rule": "Expression",
+    "naming_rule": "By fieldname",
     "owner": "Administrator",
     "permissions": [
         {
@@ -98,6 +141,7 @@
             "delete": 1,
             "email": 1,
             "export": 1,
+            "import": 1,
             "print": 1,
             "read": 1,
             "report": 1,
