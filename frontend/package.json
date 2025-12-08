@@ -11,6 +11,7 @@
     "copy-html-entry": "cp ../genmedai/public/frontend/index.html ../genmedai/www/frontend.html"
   },
   "dependencies": {
+    "framer-motion": "^12.23.25",
     "frappe-react-sdk": "^1.7.1",
     "lucide-react": "^0.555.0",
     "react": "^19.2.0",

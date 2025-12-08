@@ -10,6 +10,10 @@ import UpdatePassword from './pages/auth/UpdatePassword';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import MyAccount from './pages/MyAccount';
+import HowItWorks from './pages/HowItWorks';
+import FAQs from './pages/FAQs';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 
 import Search from './pages/Search';
 
@@ -37,6 +41,11 @@ function App() {
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/my-account" element={<MyAccount />} />
               <Route path="/search" element={<Search />} />
+
+              <Route path="/how-it-works" element={<HowItWorks />} />
+              <Route path="/faqs" element={<FAQs />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
 
               <Route path="*" element={<NotFound />} />
             </Route>

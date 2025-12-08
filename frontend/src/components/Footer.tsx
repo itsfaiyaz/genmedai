@@ -45,6 +45,9 @@ const Footer = () => {
                         <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
                             Smarter. Cheaper. Safer. Your AI guide to affordable medicines. We help you find exact substitutes and save money on healthcare.
                         </p>
+                        <p className="text-gray-500 text-xs">
+                            A product of <span className="text-white font-semibold">Ontu Technologies</span>
+                        </p>
                     </div>
 
                     {/* Quick Links */}
@@ -98,11 +101,14 @@ const Footer = () => {
                         <div className="space-y-4 text-sm text-gray-400">
                             <div className="flex items-center gap-3">
                                 <Mail className="w-4 h-4 text-brand-teal" />
-                                <span>support@genmedai.com</span>
+                                <a href="mailto:support@ontu.in" className="hover:text-white transition-colors">support@ontu.in</a>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Phone className="w-4 h-4 text-brand-teal" />
-                                <span>+91 1800-GEN-MED</span>
+                                <a href="tel:+919122331261" className="hover:text-white transition-colors">+91 9122331261</a>
+                            </div>
+                            <div className="text-xs text-gray-500 mt-2">
+                                genmedai.ontu.in
                             </div>
 
                             <div className="flex space-x-4 pt-4">
@@ -125,10 +131,10 @@ const Footer = () => {
 
                 <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
                     <p className="text-sm text-gray-500">
-                        &copy; {new Date().getFullYear()} GenMedAI. All rights reserved. Not a substitute for professional medical advice.
+                        &copy; {new Date().getFullYear()} Ontu Technologies. All rights reserved.
                     </p>
                     <p className="text-sm text-gray-500 flex items-center gap-1">
-                        Made with <Heart className="h-4 w-4 text-red-500 fill-current" /> for a healthier India.
+                        Designed by <span className="text-white font-medium">Ontu</span> <Heart className="h-3 w-3 text-red-500 fill-current mx-1" />
                     </p>
                 </div>
             </div>

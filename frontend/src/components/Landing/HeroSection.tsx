@@ -2,6 +2,13 @@ import React from 'react';
 import { Upload, Search, ShieldCheck, Zap } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
+    const scrollToSection = (id: string) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <section className="relative pt-24 pb-20 lg:pt-32 lg:pb-40 overflow-hidden bg-white dark:bg-gray-950 transition-colors duration-300">
             {/* Background Effects */}
@@ -30,11 +37,17 @@ const HeroSection: React.FC = () => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                            <button className="px-8 py-4 rounded-full bg-brand-gradient text-white font-bold text-lg shadow-xl shadow-brand-blue/20 hover:shadow-brand-blue/40 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center">
+                            <button
+                                onClick={() => scrollToSection('search-section')}
+                                className="px-8 py-4 rounded-full bg-brand-gradient text-white font-bold text-lg shadow-xl shadow-brand-blue/20 hover:shadow-brand-blue/40 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                            >
                                 <Search size={20} className="mr-2" />
                                 Find Substitute Now
                             </button>
-                            <button className="px-8 py-4 rounded-full bg-brand-slate dark:bg-gray-800 text-white font-bold text-lg shadow-lg hover:bg-brand-navy dark:hover:bg-gray-700 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center">
+                            <button
+                                onClick={() => scrollToSection('upload-prescription-section')}
+                                className="px-8 py-4 rounded-full bg-brand-slate dark:bg-gray-800 text-white font-bold text-lg shadow-lg hover:bg-brand-navy dark:hover:bg-gray-700 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                            >
                                 <Upload size={20} className="mr-2" />
                                 Upload Prescription
                             </button>
