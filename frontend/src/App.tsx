@@ -11,7 +11,7 @@ import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import MyAccount from './pages/MyAccount';
 
-import MedicineSearch from './pages/MedicineSearch';
+import Search from './pages/Search';
 
 import NotFound from './pages/NotFound';
 import { ThemeProvider } from './components/theme-provider';
@@ -23,8 +23,6 @@ function App() {
   return (
     <FrappeProvider enableSocket={enableSocket} siteName={siteName}>
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        {/* <BrowserRouter basename={import.meta.env.DEV ? '/' : '/frontend'}> */}
-
         <BrowserRouter basename={import.meta.env.DEV ? '/' : (window.location.pathname.startsWith('/frontend') ? '/frontend' : '/')}>
           <Routes>
             <Route element={<Layout />}>
@@ -38,7 +36,7 @@ function App() {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/my-account" element={<MyAccount />} />
-              <Route path="/medicine-search" element={<MedicineSearch />} />
+              <Route path="/search" element={<Search />} />
 
               <Route path="*" element={<NotFound />} />
             </Route>

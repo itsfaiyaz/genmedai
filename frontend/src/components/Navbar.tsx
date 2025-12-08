@@ -64,7 +64,7 @@ const Navbar = () => {
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (searchQuery.trim()) {
-            navigate(`/medicine-search?query=${encodeURIComponent(searchQuery)}`);
+            navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
             setIsSearchOpen(false);
             setSearchQuery('');
             setIsMenuOpen(false); // Close mobile menu if open
@@ -84,6 +84,7 @@ const Navbar = () => {
 
     const navItems = [
         { name: 'Home', path: '/' },
+        { name: 'Search', path: '/search' },
         { name: 'About', path: '/about' },
         { name: 'Contact', path: '/contact' },
     ];

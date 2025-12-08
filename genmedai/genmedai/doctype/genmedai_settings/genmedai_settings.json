@@ -6,7 +6,8 @@
     "field_order": [
         "ai_settings_section",
         "ai_provider",
-        "gemini_api_key"
+        "gemini_api_key",
+        "openai_api_key"
     ],
     "fields": [
         {
@@ -19,14 +20,20 @@
             "fieldname": "ai_provider",
             "fieldtype": "Select",
             "label": "AI Provider",
-            "options": "Google Gemini",
+            "options": "Google Gemini\nOpenAI",
             "reqd": 1
         },
         {
+            "depends_on": "eval:doc.ai_provider == 'Google Gemini'",
             "fieldname": "gemini_api_key",
             "fieldtype": "Password",
-            "label": "Gemini API Key",
-            "reqd": 1
+            "label": "Gemini API Key"
+        },
+        {
+            "depends_on": "eval:doc.ai_provider == 'OpenAI'",
+            "fieldname": "openai_api_key",
+            "fieldtype": "Password",
+            "label": "OpenAI API Key"
         }
     ],
     "issingle": 1,
