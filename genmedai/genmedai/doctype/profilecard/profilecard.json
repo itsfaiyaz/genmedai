@@ -1,0 +1,191 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "format:PRO-{MM}-{YYYY}-{#####}",
+    "creation": "2025-11-29 02:35:52.877906",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "section_break_basic",
+        "user",
+        "created_by",
+        "relation",
+        "full_name",
+        "gender",
+        "status",
+        "verified_by",
+        "mobile_number",
+        "is_mobile_public",
+        "column_break_1",
+        "age",
+        "location",
+        "profession",
+        "profile_image",
+        "section_break_details",
+        "about_me",
+        "interests"
+    ],
+    "fields": [
+        {
+            "fieldname": "section_break_basic",
+            "fieldtype": "Section Break",
+            "label": "Basic Info"
+        },
+        {
+            "fieldname": "user",
+            "fieldtype": "Link",
+            "label": "User",
+            "options": "User",
+            "reqd": 1
+        },
+        {
+            "fieldname": "created_by",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Created By",
+            "options": "User"
+        },
+        {
+            "fieldname": "relation",
+            "fieldtype": "Data",
+            "label": "Relationship to Profile"
+        },
+        {
+            "fieldname": "full_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Full Name",
+            "reqd": 1
+        },
+        {
+            "fieldname": "gender",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Gender",
+            "options": "Male\nFemale\nOther",
+            "reqd": 1
+        },
+        {
+            "default": "Unverified",
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Status",
+            "options": "Unverified\nVerified"
+        },
+        {
+            "fieldname": "verified_by",
+            "fieldtype": "Link",
+            "label": "Verified By",
+            "options": "User"
+        },
+        {
+            "fieldname": "mobile_number",
+            "fieldtype": "Data",
+            "label": "Mobile Number",
+            "reqd": 1
+        },
+        {
+            "default": "0",
+            "fieldname": "is_mobile_public",
+            "fieldtype": "Check",
+            "label": "Make Mobile Number Public"
+        },
+        {
+            "fieldname": "column_break_1",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "age",
+            "fieldtype": "Int",
+            "in_list_view": 1,
+            "label": "Age",
+            "reqd": 1
+        },
+        {
+            "fieldname": "location",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Location",
+            "reqd": 1
+        },
+        {
+            "fieldname": "profession",
+            "fieldtype": "Data",
+            "label": "Profession",
+            "reqd": 1
+        },
+        {
+            "fieldname": "profile_image",
+            "fieldtype": "Data",
+            "label": "Profile Image URL"
+        },
+        {
+            "fieldname": "section_break_details",
+            "fieldtype": "Section Break",
+            "label": "Details"
+        },
+        {
+            "fieldname": "about_me",
+            "fieldtype": "Text",
+            "label": "About Me"
+        },
+        {
+            "fieldname": "interests",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Interests"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2025-11-29 17:27:11.900560",
+    "modified_by": "Administrator",
+    "module": "GenMedAI App",
+    "name": "ProfileCard",
+    "naming_rule": "Expression",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        },
+        {
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "permlevel": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        },
+        {
+            "create": 1,
+            "read": 1,
+            "role": "GenMedAI Member",
+            "write": 1,
+            "if_owner": 1
+        },
+        {
+            "permlevel": 0,
+            "read": 1,
+            "role": "Guest"
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

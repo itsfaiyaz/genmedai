@@ -1,9 +1,11 @@
 app_name = "genmedai"
-app_title = "GenMedAI"
-app_publisher = "Ontu Technologies"
-app_description = "Generic Medicine AI"
-app_email = "admin@ontu.in"
+app_title = "GenMedAI App"
+app_publisher = "Adimyra Systems Private Limited"
+app_description = "GenMedAI App"
+app_email = "admin@adimyra.com"
 app_license = "agpl-3.0"
+
+app_logo_url = "/assets/genmedai/images/adiCloudFavicon.png"
 
 # Apps
 # ------------------
@@ -15,7 +17,7 @@ app_license = "agpl-3.0"
 # 	{
 # 		"name": "genmedai",
 # 		"logo": "/assets/genmedai/logo.png",
-# 		"title": "GenMedAI",
+# 		"title": "GenMedAI App",
 # 		"route": "/genmedai",
 # 		"has_permission": "genmedai.api.permission.has_app_permission"
 # 	}
@@ -83,7 +85,8 @@ app_license = "agpl-3.0"
 # ------------
 
 # before_install = "genmedai.install.before_install"
-# after_install = "genmedai.install.after_install"
+after_install = "genmedai.install.after_install"
+after_migrate = "genmedai.install.after_migrate"
 
 # Uninstallation
 # ------------
@@ -242,3 +245,56 @@ app_license = "agpl-3.0"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+
+
+
+
+website_route_rules = [
+    {"from_route": "/update-password", "to_route": "frontend"},
+    # for login and signup register also
+    {"from_route": "/login", "to_route": "frontend"},
+    {"from_route": "/register", "to_route": "frontend"},
+    {"from_route": "/forgot-password", "to_route": "frontend"},
+    {"from_route": "/frontend/<path:app_path>", "to_route": "frontend"},
+    {"from_route": "/frontend", "to_route": "frontend"},
+
+    #contact and about us page
+    {"from_route": "/contact", "to_route": "frontend"},
+    {"from_route": "/about", "to_route": "frontend"},
+    
+    # 404 page
+    {"from_route": "/404", "to_route": "frontend"},
+    {"from_route": "/index", "to_route": "/"},
+    
+    # allow app - MUST be before catch-all
+    {"from_route": "/app", "to_route": "app"},
+    {"from_route": "/app/<path:app_path>", "to_route": "app"},
+
+    # Catch-all - MUST be last
+    {"from_route": "/<path:app_path>", "to_route": "frontend"},
+]
+
+
+
+
+# website_route_rules = [
+#     {"from_route": "/update-password", "to_route": "frontend"},
+#     # for login and signup register also
+#     {"from_route": "/login", "to_route": "frontend"},
+#     {"from_route": "/register", "to_route": "frontend"},
+#     {"from_route": "/forgot-password", "to_route": "frontend"},
+#     {"from_route": "/frontend/<path:app_path>", "to_route": "frontend"},
+#     {"from_route": "/frontend", "to_route": "frontend"},
+
+#     #contact and about us page
+#     {"from_route": "/contact", "to_route": "frontend"},
+#     {"from_route": "/about", "to_route": "frontend"},
+    
+#     # 404 page
+#     {"from_route": "/404", "to_route": "frontend"},
+#     {"from_route": "/index", "to_route": "/"},
+#     {"from_route": "/<path:app_path>", "to_route": "frontend"},
+#     # allow app
+#     {"from_route": "/app", "to_route": "/app"},
+#     {"from_route": "/app/<path:app_path>", "to_route": "/app/<path:app_path>"},
+# ]
