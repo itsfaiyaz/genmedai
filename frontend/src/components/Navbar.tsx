@@ -1,7 +1,7 @@
 import { useFrappeAuth, useFrappeGetDoc, useFrappeGetDocList } from 'frappe-react-sdk';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { LogOut, Menu, X, ChevronDown, LayoutDashboard, Settings, Pill, User } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { LogOut, Menu, X, ChevronDown, LayoutDashboard, Settings, Pill, User, Search } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { ModeToggle } from './mode-toggle';
 
 const Navbar = () => {
@@ -10,6 +10,9 @@ const Navbar = () => {
     const location = useLocation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
     // Fetch the full user profile (name, image) for display
     const { data: userProfileList } = useFrappeGetDocList('User', {
@@ -27,6 +30,13 @@ const Navbar = () => {
             mutateUserDoc();
         }
     }, [currentUser]);
+
+    // Focus search input when opened
+    useEffect(() => {
+        if (isSearchOpen && searchInputRef.current) {
+            searchInputRef.current.focus();
+        }
+    }, [isSearchOpen]);
 
     // Fetch all roles that have Desk Access
     const { data: deskRoles } = useFrappeGetDocList('Role', {
@@ -51,6 +61,16 @@ const Navbar = () => {
         }
     };
 
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/medicine-search?query=${encodeURIComponent(searchQuery)}`);
+            setIsSearchOpen(false);
+            setSearchQuery('');
+            setIsMenuOpen(false); // Close mobile menu if open
+        }
+    };
+
     const isLoggedIn = currentUser && currentUser !== 'Guest';
     const displayName = userProfile?.full_name || currentUser || 'User';
     const displayImage = userProfile?.user_image;
@@ -64,9 +84,7 @@ const Navbar = () => {
 
     const navItems = [
         { name: 'Home', path: '/' },
-        { name: 'How It Works', path: '/how-it-works' },
         { name: 'About', path: '/about' },
-        { name: 'FAQs', path: '/faqs' },
         { name: 'Contact', path: '/contact' },
     ];
 
@@ -109,11 +127,37 @@ const Navbar = () => {
                             })}
                         </div>
 
-                        {/* CTA Button */}
-                        <div>
-                            <button className="bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] hover:from-[#2563EB] hover:to-[#14B8A6] text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
-                                Check Medicine Substitute
-                            </button>
+                        {/* Search / CTA Button */}
+                        <div className="relative">
+                            {isSearchOpen ? (
+                                <form onSubmit={handleSearch} className="relative w-64 animate-in fade-in slide-in-from-right-5 duration-200">
+                                    <input
+                                        ref={searchInputRef}
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        placeholder="Search medicine..."
+                                        className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border-2 border-[#2DD4BF] rounded-full text-sm outline-none focus:ring-2 focus:ring-[#2DD4BF]/20 transition-all font-medium"
+                                        onBlur={() => !searchQuery && setIsSearchOpen(false)}
+                                    />
+                                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsSearchOpen(false)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
+                                    >
+                                        <X className="w-3 h-3 text-gray-500" />
+                                    </button>
+                                </form>
+                            ) : (
+                                <button
+                                    onClick={() => setIsSearchOpen(true)}
+                                    className="bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] hover:from-[#2563EB] hover:to-[#14B8A6] text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
+                                >
+                                    <Search className="w-4 h-4" />
+                                    Check Medicine Substitute
+                                </button>
+                            )}
                         </div>
 
                         <div className="pl-2 border-l border-gray-200 dark:border-gray-700 ml-2">
@@ -228,9 +272,17 @@ const Navbar = () => {
                             );
                         })}
                         <div className="pt-4">
-                            <button className="w-full bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] text-white px-6 py-3 rounded-xl text-base font-bold shadow-md">
-                                Check Medicine Substitute
-                            </button>
+                            <form onSubmit={handleSearch} className="relative">
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Check medicine substitute..."
+                                    className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border-2 border-[#2DD4BF] rounded-xl text-base outline-none focus:ring-2 focus:ring-[#2DD4BF]/20 transition-all font-medium"
+                                />
+                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <button type="submit" className="hidden" /> {/* Enable Enter key submission */}
+                            </form>
                         </div>
                     </div>
 

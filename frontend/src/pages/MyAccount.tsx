@@ -1,25 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useFrappeAuth, useFrappeGetDocList, useFrappeUpdateDoc } from 'frappe-react-sdk';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, User, Heart, Plus, Edit, Search, Filter, Eye, Camera, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
-import CreateProfileDialog from '../components/CreateProfileDialog';
-import ViewProfileDialog from '../components/ViewProfileDialog';
-import EditProfileDialog from '../components/EditProfileDialog';
+import { LogOut, User, Camera, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+
 
 const MyAccount = () => {
     const { currentUser, logout } = useFrappeAuth();
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('profiles');
+    const [activeTab, setActiveTab] = useState('settings');
     const [isEditing, setIsEditing] = useState(false);
-
-    // Dialog States
-    const [isCreateProfileOpen, setIsCreateProfileOpen] = useState(false);
-    const [viewProfileId, setViewProfileId] = useState<string | null>(null);
-    const [editProfileId, setEditProfileId] = useState<string | null>(null);
-
-    // Search & Filter States
-    const [searchQuery, setSearchQuery] = useState('');
-    const [statusFilter, setStatusFilter] = useState('All');
 
     // Form States
     const [formData, setFormData] = useState({
@@ -63,12 +52,6 @@ const MyAccount = () => {
             });
         }
     }, [user]);
-
-    // Fetch My Profiles (Matrimony Profiles)
-    const { data: myProfiles, isLoading: profilesLoading, mutate: mutateProfiles } = useFrappeGetDocList('ProfileCard', {
-        filters: [['owner', '=', currentUser || '']],
-        fields: ['name', 'full_name', 'age', 'gender', 'profession', 'location', 'profile_image', 'status']
-    });
 
     const handleLogout = async () => {
         await logout();
@@ -165,33 +148,6 @@ const MyAccount = () => {
         }
     };
 
-    const handleProfileCreated = () => {
-        mutateProfiles();
-        setIsCreateProfileOpen(false);
-    };
-
-    const handleProfileUpdated = () => {
-        mutateProfiles();
-        setEditProfileId(null);
-    };
-
-    // Profile Tab State
-    const [profileTab, setProfileTab] = useState<'Verified' | 'Unverified'>('Verified');
-
-    // Filter Logic
-    const filteredProfiles = myProfiles?.filter(profile => {
-        const matchesSearch = profile.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            profile.profession?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            profile.location?.toLowerCase().includes(searchQuery.toLowerCase());
-
-        // Filter by Tab
-        const matchesTab = profileTab === 'Verified'
-            ? profile.status === 'Verified'
-            : profile.status !== 'Verified'; // Show all non-verified in Unverified tab
-
-        return matchesSearch && matchesTab;
-    });
-
     if (!currentUser) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
@@ -236,12 +192,6 @@ const MyAccount = () => {
                                 <User className="mr-2 h-4 w-4" /> Account Settings
                             </button>
                             <button
-                                className={`w-full flex items-center justify-start px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'profiles' ? 'bg-accent text-accent-foreground' : 'hover:bg-accent hover:text-accent-foreground'}`}
-                                onClick={() => setActiveTab('profiles')}
-                            >
-                                <Heart className="mr-2 h-4 w-4" /> My Profiles
-                            </button>
-                            <button
                                 className="w-full flex items-center justify-start px-4 py-2 rounded-md text-sm font-medium text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                                 onClick={handleLogout}
                             >
@@ -253,168 +203,6 @@ const MyAccount = () => {
 
                 {/* Main Content */}
                 <div className="w-full md:w-3/4">
-                    {/* Tabs Header */}
-                    <div className="mb-8 border-b">
-                        <div className="flex space-x-8">
-                            <button
-                                onClick={() => setActiveTab('profiles')}
-                                className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'profiles'
-                                    ? 'border-primary text-primary'
-                                    : 'border-transparent text-muted-foreground hover:text-foreground'
-                                    }`}
-                            >
-                                My Matrimony Profiles
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('settings')}
-                                className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'settings'
-                                    ? 'border-primary text-primary'
-                                    : 'border-transparent text-muted-foreground hover:text-foreground'
-                                    }`}
-                            >
-                                Account Settings
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* My Profiles Tab */}
-                    {activeTab === 'profiles' && (
-                        <div className="space-y-6">
-                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                <h2 className="text-2xl font-bold tracking-tight">Managed Profiles</h2>
-                                <button
-                                    onClick={() => setIsCreateProfileOpen(true)}
-                                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                                >
-                                    <Plus className="mr-2 h-4 w-4" /> Create New Profile
-                                </button>
-                            </div>
-
-                            {/* Profile Status Tabs */}
-                            <div className="flex p-1 bg-gray-100 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 w-fit">
-                                <button
-                                    onClick={() => setProfileTab('Verified')}
-                                    className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${profileTab === 'Verified'
-                                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                                        }`}
-                                >
-                                    Verified
-                                </button>
-                                <button
-                                    onClick={() => setProfileTab('Unverified')}
-                                    className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${profileTab === 'Unverified'
-                                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                                        }`}
-                                >
-                                    Unverified
-                                </button>
-                            </div>
-
-                            {/* Search Bar */}
-                            <div className="flex flex-col sm:flex-row gap-4 bg-muted/30 p-4 rounded-lg border">
-                                <div className="relative flex-1">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search profiles by name, profession..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full pl-9 pr-4 py-2 rounded-md border border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                    />
-                                </div>
-                            </div>
-
-                            {profilesLoading ? (
-                                <div className="flex justify-center py-12">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                                </div>
-                            ) : filteredProfiles?.length === 0 ? (
-                                <div className="rounded-xl border bg-card text-card-foreground shadow-sm text-center py-12">
-                                    <div className="p-6">
-                                        {searchQuery ? (
-                                            <>
-                                                <Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                                                <h3 className="text-lg font-semibold mb-2">No Matches Found</h3>
-                                                <p className="text-muted-foreground mb-6">Try adjusting your search.</p>
-                                                <button
-                                                    onClick={() => setSearchQuery('')}
-                                                    className="text-primary hover:underline"
-                                                >
-                                                    Clear Search
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Heart className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                                                <h3 className="text-lg font-semibold mb-2">No {profileTab} Profiles</h3>
-                                                <p className="text-muted-foreground mb-6">
-                                                    {profileTab === 'Verified'
-                                                        ? "You don't have any verified profiles yet."
-                                                        : "You don't have any unverified profiles."}
-                                                </p>
-                                                {profileTab === 'Unverified' && (
-                                                    <button
-                                                        onClick={() => setIsCreateProfileOpen(true)}
-                                                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                                                    >
-                                                        Create Your First Profile
-                                                    </button>
-                                                )}
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {filteredProfiles?.map((profile) => (
-                                        <div key={profile.name} className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                                            <div className="flex p-4 gap-4">
-                                                <div className="h-16 w-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                                                    {profile.profile_image ? (
-                                                        <img src={profile.profile_image} alt={profile.full_name} className="h-full w-full object-cover" />
-                                                    ) : (
-                                                        <div className="flex h-full w-full items-center justify-center bg-gray-200 text-gray-500 font-bold">
-                                                            {profile.full_name[0]}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex justify-between items-start">
-                                                        <div>
-                                                            <h3 className="font-semibold text-lg truncate">{profile.full_name}</h3>
-                                                            <p className="text-sm text-muted-foreground">{profile.profession}, {profile.age} yrs</p>
-                                                            <p className="text-xs text-muted-foreground mt-1">{profile.location}</p>
-                                                        </div>
-                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ml-2 ${profile.status === 'Verified' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                                                            }`}>
-                                                            {profile.status}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="bg-muted/50 p-3 flex justify-end gap-2">
-                                                <button
-                                                    onClick={() => setViewProfileId(profile.name)}
-                                                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-3"
-                                                >
-                                                    <Eye className="h-4 w-4 mr-1" /> View
-                                                </button>
-                                                <button
-                                                    onClick={() => setEditProfileId(profile.name)}
-                                                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
-                                                >
-                                                    <Edit className="h-4 w-4 mr-1" /> Edit
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
-
                     {/* Settings Tab */}
                     {activeTab === 'settings' && (
                         <div className="rounded-xl border bg-card text-card-foreground shadow-sm">
@@ -614,31 +402,9 @@ const MyAccount = () => {
                     )}
                 </div>
             </div>
-
-            <CreateProfileDialog
-                isOpen={isCreateProfileOpen}
-                onClose={handleProfileCreated}
-                currentUser={currentUser}
-            />
-
-            <ViewProfileDialog
-                isOpen={!!viewProfileId}
-                onClose={() => setViewProfileId(null)}
-                profileId={viewProfileId}
-                onEdit={() => {
-                    setEditProfileId(viewProfileId);
-                    setViewProfileId(null);
-                }}
-            />
-
-            <EditProfileDialog
-                isOpen={!!editProfileId}
-                onClose={() => setEditProfileId(null)}
-                profileId={editProfileId}
-                onUpdateSuccess={handleProfileUpdated}
-            />
         </div>
     );
 };
+
 
 export default MyAccount;

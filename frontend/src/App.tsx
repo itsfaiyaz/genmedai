@@ -6,13 +6,13 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import UpdatePassword from './pages/auth/UpdatePassword';
-import Business from './pages/Business';
-import Classifieds from './pages/Classifieds';
-import Social from './pages/Social';
+
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import MyAccount from './pages/MyAccount';
-import SearchResults from './pages/SearchResults';
+
+import MedicineSearch from './pages/MedicineSearch';
+
 import NotFound from './pages/NotFound';
 import { ThemeProvider } from './components/theme-provider';
 
@@ -34,14 +34,12 @@ function App() {
               <Route path="/update-password" element={<UpdatePassword />} />
               <Route path="/" element={<Home />} />
               <Route path="/index" element={<Home />} />
-              <Route path="/business" element={<Business />} />
-              <Route path="/classifieds" element={<Classifieds />} />
-              <Route path="/social" element={<Social />} />
-              <Route path="/about" element={<AboutUs />} />
+
               <Route path="/about" element={<AboutUs />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/my-account" element={<MyAccount />} />
-              <Route path="/search" element={<SearchResults />} />
+              <Route path="/medicine-search" element={<MedicineSearch />} />
+
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
