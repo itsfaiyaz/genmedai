@@ -8,22 +8,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // https://vitejs.dev/config/
-// Config updated to trigger restart
-export default defineConfig({
-  plugins: [react()],
-  base: '/',
-  server: {
-    port: 8080,
-    proxy: proxyOptions
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src')
-    }
-  },
-  build: {
-    outDir: '../genmedai/public/frontend',
-    emptyOutDir: true,
-    target: 'es2015',
-  },
+export default defineConfig(({ command }) => {
+  return {
+    plugins: [react()],
+    base: command === 'serve' ? '/' : '/assets/genmedai/frontend/',
+    server: {
+      port: 8080,
+      proxy: proxyOptions
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src')
+      }
+    },
+    build: {
+      outDir: '../genmedai/public/frontend',
+      emptyOutDir: true,
+      target: 'es2015',
+    },
+  };
 });

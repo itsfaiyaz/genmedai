@@ -59,7 +59,7 @@ app_logo_url = "/assets/genmedai/images/adiCloudFavicon.png"
 # ----------
 
 # application home page (will override Website Settings)
-# home_page = "login"
+home_page = "frontend"
 
 # website user home page (by Role)
 # role_home_page = {
