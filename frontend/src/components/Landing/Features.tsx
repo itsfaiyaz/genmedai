@@ -6,14 +6,14 @@ const Features = () => {
             icon: Pill,
             title: "AI-Powered Salt Matching",
             description: "We analyze the exact salt composition of your medicine and find 100% equivalent substitutes.",
-            color: "text-blue-500",
+            color: "text-brand-blue",
             bg: "bg-blue-50 dark:bg-blue-900/20"
         },
         {
             icon: Wallet,
             title: "Save 40–80% on Medicines",
             description: "Stop overpaying for branded medicines. Get cheaper generics with identical composition.",
-            color: "text-[#2DD4BF]",
+            color: "text-brand-teal",
             bg: "bg-teal-50 dark:bg-teal-900/20"
         },
         {
@@ -39,7 +39,7 @@ const Features = () => {
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                         Why Millions Will Choose GenMedAI
                     </h2>
-                    <div className="h-1.5 w-24 bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] rounded-full mx-auto"></div>
+                    <div className="h-1.5 w-24 bg-brand-gradient rounded-full mx-auto"></div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

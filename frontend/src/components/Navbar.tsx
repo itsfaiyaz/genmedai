@@ -95,12 +95,12 @@ const Navbar = () => {
                     {/* Logo Section */}
                     <div className="flex items-center">
                         <Link to="/" className="flex-shrink-0 flex items-center gap-2 group">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center text-[#2DD4BF] dark:text-[#2DD4BF] bg-white dark:bg-gray-800">
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center text-brand-teal dark:text-brand-teal bg-white dark:bg-gray-800">
                                 <Pill className="w-8 h-8 fill-current" />
                             </div>
                             <div className="flex flex-col justify-center">
-                                <span className="font-extrabold text-2xl text-gray-900 dark:text-white tracking-tight leading-none">
-                                    GenMed<span className="text-[#2DD4BF]">AI</span>
+                                <span className="font-extrabold text-2xl text-brand-navy dark:text-white tracking-tight leading-none">
+                                    GenMed<span className="text-brand-teal">AI</span>
                                 </span>
                             </div>
                         </Link>
@@ -117,7 +117,7 @@ const Navbar = () => {
                                         key={item.name}
                                         to={item.path}
                                         className={`text-[15px] font-semibold transition-colors duration-200 ${isActive
-                                            ? 'text-[#2DD4BF]'
+                                            ? 'text-brand-teal'
                                             : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                                             }`}
                                     >
@@ -137,7 +137,7 @@ const Navbar = () => {
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         placeholder="Search medicine..."
-                                        className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border-2 border-[#2DD4BF] rounded-full text-sm outline-none focus:ring-2 focus:ring-[#2DD4BF]/20 transition-all font-medium"
+                                        className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border-2 border-brand-teal rounded-full text-sm outline-none focus:ring-2 focus:ring-brand-teal/20 transition-all font-medium"
                                         onBlur={() => !searchQuery && setIsSearchOpen(false)}
                                     />
                                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -152,7 +152,7 @@ const Navbar = () => {
                             ) : (
                                 <button
                                     onClick={() => setIsSearchOpen(true)}
-                                    className="bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] hover:from-[#2563EB] hover:to-[#14B8A6] text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
+                                    className="bg-brand-gradient hover:opacity-90 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
                                 >
                                     <Search className="w-4 h-4" />
                                     Check Medicine Substitute
@@ -175,10 +175,10 @@ const Navbar = () => {
                                         <img
                                             src={displayImage}
                                             alt={displayName}
-                                            className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700 group-hover:border-[#2DD4BF] transition-colors"
+                                            className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700 group-hover:border-brand-teal transition-colors"
                                         />
                                     ) : (
-                                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 font-semibold border border-gray-200 dark:border-gray-700 group-hover:border-[#2DD4BF] transition-colors">
+                                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 font-semibold border border-gray-200 dark:border-gray-700 group-hover:border-brand-teal transition-colors">
                                             {getUserInitials()}
                                         </div>
                                     )}
@@ -229,7 +229,7 @@ const Navbar = () => {
                             <div className="pl-2">
                                 <Link
                                     to="/login"
-                                    className="p-2 text-gray-500 hover:text-[#2DD4BF] transition-colors"
+                                    className="p-2 text-gray-500 hover:text-brand-teal transition-colors"
                                     title="Sign In"
                                 >
                                     <User className="w-6 h-6" />
@@ -262,7 +262,7 @@ const Navbar = () => {
                                     key={item.name}
                                     to={item.path}
                                     className={`block px-3 py-3 rounded-lg text-base font-semibold ${isActive
-                                        ? 'bg-gray-50 dark:bg-gray-800 text-[#2DD4BF]'
+                                        ? 'bg-gray-50 dark:bg-gray-800 text-brand-teal'
                                         : 'text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
                                         }`}
                                     onClick={() => setIsMenuOpen(false)}
@@ -278,7 +278,7 @@ const Navbar = () => {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Check medicine substitute..."
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border-2 border-[#2DD4BF] rounded-xl text-base outline-none focus:ring-2 focus:ring-[#2DD4BF]/20 transition-all font-medium"
+                                    className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border-2 border-brand-teal rounded-xl text-base outline-none focus:ring-2 focus:ring-brand-teal/20 transition-all font-medium"
                                 />
                                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                                 <button type="submit" className="hidden" /> {/* Enable Enter key submission */}

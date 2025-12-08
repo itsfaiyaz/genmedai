@@ -15,9 +15,9 @@ const SearchSection = () => {
                             <input
                                 type="text"
                                 placeholder="Enter medicine name e.g. Urimax 0.4"
-                                className="w-full h-14 pl-6 pr-14 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#2DD4BF] focus:border-transparent outline-none transition-all text-lg placeholder:text-gray-400"
+                                className="w-full h-14 pl-6 pr-14 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-teal focus:border-transparent outline-none transition-all text-lg placeholder:text-gray-400"
                             />
-                            <button className="absolute right-2 top-2 h-10 w-10 bg-[#2DD4BF] hover:bg-[#14B8A6] rounded-lg flex items-center justify-center text-white transition-colors">
+                            <button className="absolute right-2 top-2 h-10 w-10 bg-brand-teal hover:bg-brand-teal/90 rounded-lg flex items-center justify-center text-white transition-colors">
                                 <Search className="w-5 h-5" />
                             </button>
                         </div>
@@ -28,9 +28,9 @@ const SearchSection = () => {
                         <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
                             Or Upload Prescription
                         </h3>
-                        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-[#2DD4BF] hover:bg-white dark:hover:bg-gray-700 transition-all cursor-pointer group">
+                        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-brand-teal hover:bg-white dark:hover:bg-gray-700 transition-all cursor-pointer group">
                             <div className="flex flex-col items-center gap-3">
-                                <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-[#3B82F6] group-hover:scale-110 transition-transform">
+                                <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-brand-blue group-hover:scale-110 transition-transform">
                                     <UploadCloud className="w-6 h-6" />
                                 </div>
                                 <div>
@@ -44,7 +44,7 @@ const SearchSection = () => {
                 </div>
 
                 {/* Footer of Search Card */}
-                <div className="bg-blue-50 dark:bg-blue-900/20 px-8 py-4 flex items-center justify-center gap-2 text-sm text-blue-700 dark:text-blue-300">
+                <div className="bg-blue-50 dark:bg-blue-900/20 px-8 py-4 flex items-center justify-center gap-2 text-sm text-brand-blue dark:text-blue-300">
                     <ZapIcon className="w-4 h-4 fill-current" />
                     <p>GenMedAI scans your prescription, extracts medicines, identifies salts, and finds the cheapest substitutes in seconds.</p>
                 </div>

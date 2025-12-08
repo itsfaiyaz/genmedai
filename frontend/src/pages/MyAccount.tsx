@@ -156,7 +156,7 @@ const MyAccount = () => {
                     <p className="text-gray-600 mb-6">You need to be logged in to view your account.</p>
                     <button
                         onClick={() => navigate('/login')}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md"
+                        className="bg-brand-blue text-white hover:bg-brand-blue/90 px-4 py-2 rounded-md"
                     >
                         Go to Login
                     </button>
@@ -252,7 +252,7 @@ const MyAccount = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => fileInputRef.current?.click()}
-                                                className="text-sm font-medium text-primary hover:underline"
+                                                className="text-sm font-medium text-brand-blue hover:underline"
                                                 disabled={isUploading}
                                             >
                                                 {isUploading ? 'Uploading...' : 'Change Profile Photo'}
@@ -378,7 +378,7 @@ const MyAccount = () => {
                                         <button
                                             onClick={handleUpdateProfile}
                                             disabled={isUpdating}
-                                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-brand-blue text-white hover:bg-brand-blue/90 h-10 px-4 py-2"
                                         >
                                             {isUpdating ? (
                                                 <>
@@ -392,7 +392,7 @@ const MyAccount = () => {
                                 ) : (
                                     <button
                                         onClick={() => setIsEditing(true)}
-                                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-brand-blue text-white hover:bg-brand-blue/90 h-10 px-4 py-2"
                                     >
                                         Edit Profile
                                     </button>

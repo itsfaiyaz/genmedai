@@ -1,90 +1,117 @@
-import { Upload, ShieldCheck, CheckCircle2, Zap } from 'lucide-react';
+import React from 'react';
+import { Upload, Search, ShieldCheck, Zap } from 'lucide-react';
 
-const HeroSection = () => {
+const HeroSection: React.FC = () => {
     return (
-        <div className="relative overflow-hidden bg-white dark:bg-gray-950 pt-16 pb-24 sm:pt-24 sm:pb-32">
+        <section className="relative pt-24 pb-20 lg:pt-32 lg:pb-40 overflow-hidden bg-white dark:bg-gray-950 transition-colors duration-300">
+            {/* Background Effects */}
+            <div className="absolute top-0 right-0 w-full lg:w-1/2 h-full bg-gradient-to-b from-blue-50/50 to-transparent dark:from-blue-900/10 pointer-events-none" />
+            <div className="absolute -top-20 -right-20 w-72 h-72 md:w-96 md:h-96 bg-brand-teal/10 dark:bg-brand-teal/5 rounded-full blur-3xl animate-pulse" />
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
                     {/* Left Content */}
-                    <div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-bold mb-6">
-                            <Zap className="w-4 h-4 fill-current" />
-                            <span>AI-Powered Savings Engine</span>
+                    <div className="space-y-6 md:space-y-8 text-center lg:text-left">
+                        <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 text-brand-blue dark:text-blue-400 text-sm font-medium">
+                            <Zap size={14} className="mr-2 fill-current" />
+                            AI-Powered Savings Engine
                         </div>
 
-                        <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-[1.1] mb-6">
-                            Smarter. <br />
-                            Cheaper. <br />
-                            Safer. <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF]">
+                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-brand-navy dark:text-white leading-tight tracking-tight">
+                            Smarter. Cheaper. Safer.<br />
+                            <span className="text-transparent bg-clip-text bg-brand-gradient">
                                 Your AI Guide to Affordable Medicines.
                             </span>
                         </h1>
 
-                        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl leading-relaxed">
+                        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
                             Upload your prescription or type a medicine name. GenMedAI finds cheaper substitutes with the same salt, same dose, same effect — powered by advanced AI.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                            <button className="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] hover:from-[#2563EB] hover:to-[#14B8A6] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-                                <SearchIcon className="w-5 h-5 mr-2" />
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                            <button className="px-8 py-4 rounded-full bg-brand-gradient text-white font-bold text-lg shadow-xl shadow-brand-blue/20 hover:shadow-brand-blue/40 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center">
+                                <Search size={20} className="mr-2" />
                                 Find Substitute Now
                             </button>
-                            <button className="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-gray-900 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-700 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-                                <Upload className="w-5 h-5 mr-2" />
+                            <button className="px-8 py-4 rounded-full bg-brand-slate dark:bg-gray-800 text-white font-bold text-lg shadow-lg hover:bg-brand-navy dark:hover:bg-gray-700 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center">
+                                <Upload size={20} className="mr-2" />
                                 Upload Prescription
                             </button>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            {[
-                                { icon: CheckCircle2, text: "Same Salt" },
-                                { icon: CheckCircle2, text: "Same Dosage" },
-                                { icon: ShieldCheck, text: "Trusted AI" },
-                                { icon: Zap, text: "Save 80%" },
-                            ].map((item, idx) => (
-                                <div key={idx} className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
-                                    <item.icon className="w-5 h-5 text-[#2DD4BF]" />
-                                    <span>{item.text}</span>
-                                </div>
-                            ))}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 text-sm font-medium text-gray-500 dark:text-gray-400 justify-items-center lg:justify-items-start">
+                            <div className="flex items-center"><ShieldCheck size={16} className="text-brand-teal mr-1.5" /> Same Salt</div>
+                            <div className="flex items-center"><ShieldCheck size={16} className="text-brand-teal mr-1.5" /> Same Dosage</div>
+                            <div className="flex items-center"><ShieldCheck size={16} className="text-brand-teal mr-1.5" /> Trusted AI</div>
+                            <div className="flex items-center"><ShieldCheck size={16} className="text-brand-teal mr-1.5" /> Save 80%</div>
                         </div>
                     </div>
 
-                    {/* Right Visual (Abstract) */}
+                    {/* Right Visual - Abstract SVG Composition */}
                     <div className="relative hidden lg:block">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-blue-100 to-teal-100 dark:from-blue-900/20 dark:to-teal-900/20 rounded-full blur-3xl opacity-70 animate-pulse"></div>
-                        <div className="relative z-10 mx-auto w-full max-w-md">
-                            {/* Abstract Pill Representation */}
-                            <div className="relative">
-                                {/* Green/White Pill */}
-                                <div className="flex items-center justify-center drop-shadow-2xl transform rotate-12 hover:rotate-0 transition-transform duration-700 ease-in-out">
-                                    <div className="w-32 h-64 bg-gradient-to-br from-[#2DD4BF] to-[#14B8A6] rounded-l-full relative overflow-hidden">
-                                        <div className="absolute top-0 left-0 w-full h-full bg-white/10 skew-x-12 origin-bottom-left"></div>
-                                    </div>
-                                    <div className="w-32 h-64 bg-white dark:bg-gray-100 rounded-r-full relative overflow-hidden flex items-center justify-center">
-                                        <div className="w-24 h-48 bg-gray-50 rounded-full opacity-50 blur-xl"></div>
-                                    </div>
-                                </div>
+                        <svg viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+                            <defs>
+                                <linearGradient id="heroGrad" x1="0" y1="0" x2="600" y2="500" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stopColor="#1A8CEB" stopOpacity="0.1" />
+                                    <stop offset="100%" stopColor="#31C776" stopOpacity="0.1" />
+                                </linearGradient>
+                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="20" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
+                                <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor="#3B82F6" />
+                                    <stop offset="100%" stopColor="#2DD4BF" />
+                                </linearGradient>
+                            </defs>
 
-                                {/* Floating Particles */}
-                                <div className="absolute -top-10 -right-10 w-6 h-6 bg-blue-500 rounded-full animate-bounce delay-100"></div>
-                                <div className="absolute top-20 -left-12 w-4 h-4 bg-[#2DD4BF] rounded-full animate-bounce delay-300"></div>
-                                <div className="absolute bottom-10 right-0 w-5 h-5 bg-purple-500 rounded-full animate-bounce delay-700"></div>
-                            </div>
-                        </div>
+                            {/* Abstract Mesh Background */}
+                            <path d="M50,250 Q150,150 300,250 T550,250" stroke="url(#heroGrad)" strokeWidth="2" fill="none" className="animate-[dash_10s_linear_infinite]" strokeDasharray="10 10" />
+                            <path d="M50,300 Q150,200 300,300 T550,300" stroke="url(#heroGrad)" strokeWidth="2" fill="none" className="animate-[dash_15s_linear_infinite]" strokeDasharray="5 15" />
+                            <path d="M50,200 Q150,100 300,200 T550,200" stroke="url(#heroGrad)" strokeWidth="2" fill="none" className="animate-[dash_12s_linear_infinite]" strokeDasharray="15 5" />
+
+                            {/* Glowing Central Elements - Suggesting Pills decomposing into data */}
+                            <g filter="url(#glow)">
+                                {/* Main Pill */}
+                                <rect x="180" y="180" width="240" height="100" rx="50" fill="white" className="dark:fill-gray-800" fillOpacity="0.8" />
+                                <path d="M300 180 L300 280" stroke="#E2E8F0" className="dark:stroke-gray-700" strokeWidth="2" />
+
+                                {/* Half Colored */}
+                                <path d="M180 230 C180 202.386 202.386 180 230 180 H300 V280 H230 C202.386 280 180 257.614 180 230 Z" fill="url(#brandGrad)" />
+                            </g>
+
+                            {/* Floating Data Particles */}
+                            <circle cx="450" cy="200" r="8" fill="#1A8CEB" className="animate-bounce" style={{ animationDuration: '3s' }} />
+                            <circle cx="480" cy="230" r="5" fill="#00C4A7" className="animate-bounce" style={{ animationDuration: '4s', animationDelay: '0.5s' }} />
+                            <circle cx="440" cy="260" r="6" fill="#31C776" className="animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '1s' }} />
+
+                            {/* Scanning Line */}
+                            <rect x="150" y="150" width="300" height="2" fill="#00C4A7" fillOpacity="0.5" className="animate-[scan_4s_ease-in-out_infinite]">
+                            </rect>
+
+                            {/* UI Card Floating */}
+                            <rect x="380" y="300" width="180" height="120" rx="12" fill="white" className="dark:fill-gray-800 shadow-xl" />
+                            <rect x="400" y="320" width="100" height="12" rx="6" fill="#E2E8F0" className="dark:fill-gray-700" />
+                            <rect x="400" y="345" width="140" height="8" rx="4" fill="#F1F5F9" className="dark:fill-gray-700" />
+                            <rect x="400" y="365" width="80" height="8" rx="4" fill="#F1F5F9" className="dark:fill-gray-700" />
+                            <rect x="400" y="395" width="60" height="16" rx="4" fill="#10B981" />
+                        </svg>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <style>{`
+        @keyframes dash {
+          to { stroke-dashoffset: -1000; }
+        }
+        @keyframes scan {
+          0%, 100% { transform: translateY(0); opacity: 0; }
+          50% { transform: translateY(200px); opacity: 1; }
+        }
+      `}</style>
+        </section>
     );
 };
-
-const SearchIcon = ({ className }: { className?: string }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <circle cx="11" cy="11" r="8" />
-        <path d="m21 21-4.3-4.3" />
-    </svg>
-);
 
 export default HeroSection;
