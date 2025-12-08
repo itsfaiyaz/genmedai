@@ -1,0 +1,54 @@
+{
+    "actions": [],
+    "creation": "2024-12-08 17:05:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "ai_settings_section",
+        "ai_provider",
+        "gemini_api_key"
+    ],
+    "fields": [
+        {
+            "fieldname": "ai_settings_section",
+            "fieldtype": "Section Break",
+            "label": "AI Configuration"
+        },
+        {
+            "default": "Google Gemini",
+            "fieldname": "ai_provider",
+            "fieldtype": "Select",
+            "label": "AI Provider",
+            "options": "Google Gemini",
+            "reqd": 1
+        },
+        {
+            "fieldname": "gemini_api_key",
+            "fieldtype": "Password",
+            "label": "Gemini API Key",
+            "reqd": 1
+        }
+    ],
+    "issingle": 1,
+    "links": [],
+    "modified": "2024-12-08 17:05:00.000000",
+    "modified_by": "Administrator",
+    "module": "GenMedAI",
+    "name": "GenMedAI Settings",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

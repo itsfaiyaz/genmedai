@@ -1,0 +1,124 @@
+{
+    "actions": [],
+    "autoname": "format:{brand_name} {strength}",
+    "creation": "2024-12-08 16:35:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "brand_name",
+        "salt_composition",
+        "strength",
+        "dosage_form",
+        "manufacturer",
+        "section_break_price",
+        "price",
+        "is_generic",
+        "section_break_details",
+        "image",
+        "description"
+    ],
+    "fields": [
+        {
+            "fieldname": "brand_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Brand Name",
+            "reqd": 1,
+            "search_index": 1
+        },
+        {
+            "fieldname": "salt_composition",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Salt Composition",
+            "reqd": 1,
+            "search_index": 1
+        },
+        {
+            "fieldname": "strength",
+            "fieldtype": "Data",
+            "label": "Strength",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "dosage_form",
+            "fieldtype": "Select",
+            "label": "Dosage Form",
+            "options": "Tablet\nSyrup\nInjection\nCapsule\nCream\nGel\nDrops\nInhaler\nPowder\nSachet",
+            "reqd": 1
+        },
+        {
+            "fieldname": "manufacturer",
+            "fieldtype": "Data",
+            "label": "Manufacturer"
+        },
+        {
+            "fieldname": "section_break_price",
+            "fieldtype": "Section Break"
+        },
+        {
+            "fieldname": "price",
+            "fieldtype": "Currency",
+            "label": "Price (MRP)",
+            "reqd": 1
+        },
+        {
+            "default": "0",
+            "fieldname": "is_generic",
+            "fieldtype": "Check",
+            "label": "Is Generic?"
+        },
+        {
+            "fieldname": "section_break_details",
+            "fieldtype": "Section Break"
+        },
+        {
+            "fieldname": "image",
+            "fieldtype": "Attach Image",
+            "label": "Medicine Image"
+        },
+        {
+            "fieldname": "description",
+            "fieldtype": "Text Editor",
+            "label": "Description"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2024-12-08 16:35:00.000000",
+    "modified_by": "Administrator",
+    "module": "GenMedAI",
+    "name": "Medicine",
+    "naming_rule": "Expression",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        },
+        {
+            "read": 1,
+            "role": "GenMedAI Member"
+        },
+        {
+            "read": 1,
+            "role": "All"
+        },
+        {
+            "read": 1,
+            "role": "Guest"
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}
