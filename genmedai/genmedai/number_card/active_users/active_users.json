@@ -14,7 +14,7 @@
     "label": "Active Users",
     "modified": "2024-12-01 12:15:00.000000",
     "modified_by": "Administrator",
-    "module": "GenMedAI App",
+    "module": "GenMedAI",
     "name": "Active Users",
     "owner": "Administrator",
     "parent_document_type": "",

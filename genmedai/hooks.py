@@ -1,7 +1,7 @@
 app_name = "genmedai"
-app_title = "GenMedAI App"
+app_title = "GenMedAI"
 app_publisher = "Adimyra Systems Private Limited"
-app_description = "GenMedAI App"
+app_description = "GenMedAI"
 app_email = "admin@adimyra.com"
 app_license = "agpl-3.0"
 
@@ -17,7 +17,7 @@ app_logo_url = "/assets/genmedai/images/adiCloudFavicon.png"
 # 	{
 # 		"name": "genmedai",
 # 		"logo": "/assets/genmedai/logo.png",
-# 		"title": "GenMedAI App",
+# 		"title": "GenMedAI",
 # 		"route": "/genmedai",
 # 		"has_permission": "genmedai.api.permission.has_app_permission"
 # 	}
