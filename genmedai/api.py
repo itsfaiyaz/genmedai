@@ -173,14 +173,38 @@ def get_medicines(query=None):
     frappe.log_error(f"GenMedAI Search Query: {query}", "GenMedAI Search")
     
     # 1. Search Local Database
-    # specific filters for brand_name, salt_composition, manufacturer_name
-    or_filters = {
-        "brand_name": ["like", f"%{query}%"],
-        "salt_composition": ["like", f"%{query}%"],
-        "short_composition1": ["like", f"%{query}%"],
-        "short_composition2": ["like", f"%{query}%"],
-        "manufacturer_name": ["like", f"%{query}%"]
-    }
+    
+    clean_query = query.strip()
+    is_exact_search = False
+    
+    # Check for exact match syntax (quotes)
+    if clean_query.startswith('"') and clean_query.endswith('"') and len(clean_query) > 2:
+        is_exact_search = True
+        clean_query = clean_query[1:-1].strip()
+
+    if is_exact_search:
+        # Exact Match Strategy
+        or_filters = {
+            "brand_name": clean_query,
+            "salt_composition": clean_query,
+            "short_composition1": clean_query,
+            "short_composition2": clean_query,
+            "manufacturer_name": clean_query
+        }
+    else:
+        # Broad Match Strategy (LIKE)
+        or_filters = {
+            "brand_name": ["like", f"%{query}%"],
+            "salt_composition": ["like", f"%{query}%"],
+            "short_composition1": ["like", f"%{query}%"],
+            "short_composition2": ["like", f"%{query}%"],
+            "manufacturer_name": ["like", f"%{query}%"],
+            "type": ["like", f"%{query}%"],
+            "strength": ["like", f"%{query}%"],
+            "dosage_form": ["like", f"%{query}%"],
+            "pack_size_label": ["like", f"%{query}%"],
+            "description": ["like", f"%{query}%"]
+        }
     
     local_results = frappe.get_list(
         "Medicine",
@@ -201,6 +225,22 @@ def get_medicines(query=None):
             r['dosage_form'] = r['type']
         # Ensure boolean for is_discontinued
         r['is_discontinued'] = 1 if r.get('is_discontinued') else 0
+
+        # Check for substitutes
+        r['has_substitutes'] = False
+        if r.get('salt_composition'):
+            raw_salt = r['salt_composition']
+            base_salt = raw_salt.split('(')[0].strip()
+            if not base_salt:
+                base_salt = raw_salt.strip()
+            
+            if base_salt:
+                count = frappe.db.count("Medicine", filters={
+                    "salt_composition": ["like", f"%{base_salt}%"],
+                    "name": ["!=", r["name"]]
+                })
+                if count > 0:
+                    r['has_substitutes'] = True
     
     # 2. AI Fallback / Augmentation
     # We ask AI to identify the medicine and provide details
@@ -302,11 +342,19 @@ def get_substitutes(medicine_id=None, salt_composition=None, current_price=None)
         except frappe.DoesNotExistError:
             frappe.throw("Medicine not found")
 
-    # Core logic: Same Salt + Lower Price
-    # We relax strength/dosage match for AI items as we might not have exact details match in DB
+    # Core logic: Same Salt Match
+    # 1. Clean the salt (remove strength info inside parenthesis if present to find broader matches)
+    #    e.g. "Acebrophylline (100mg)" -> "Acebrophylline"
+    #    This handles formatting differences like spaces or strength variations better
+    
+    raw_salt = source_med.salt_composition or ""
+    base_salt = raw_salt.split('(')[0].strip()
+    
+    if not base_salt:
+        base_salt = raw_salt.strip()
+
     filters = {
-        "salt_composition": ["like", f"%{source_med.salt_composition}%"],
-        "price": ["<", source_med.price]
+        "salt_composition": ["like", f"%{base_salt}%"]
     }
     
     # If real DB item, avoid showing itself
