@@ -1,6 +1,6 @@
 {
     "charts": [],
-    "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Overview</b></span>\",\"col\":12}},{\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Users\",\"col\":4}},{\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Verified Profiles\",\"col\":4}},{\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Unverified Profiles\",\"col\":4}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Quick Access</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ProfileCard\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sponsored Content\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}}]",
+    "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Quick Access</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Medicine\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}}]",
     "creation": "2024-12-01 11:53:06",
     "custom_blocks": [],
     "docstatus": 0,
@@ -25,9 +25,9 @@
             "dependencies": "",
             "hidden": 0,
             "is_query_report": 0,
-            "label": "ProfileCard",
+            "label": "Medicine",
             "link_count": 0,
-            "link_to": "ProfileCard",
+            "link_to": "Medicine",
             "link_type": "DocType",
             "onboard": 0,
             "type": "Link"
@@ -36,32 +36,19 @@
             "dependencies": "",
             "hidden": 0,
             "is_query_report": 0,
-            "label": "Sponsored Content",
+            "label": "GenMedAI Settings",
             "link_count": 0,
-            "link_to": "Sponsored Content",
+            "link_to": "GenMedAI Settings",
             "link_type": "DocType",
             "onboard": 0,
             "type": "Link"
         }
     ],
-    "modified": "2025-12-01 12:10:02.261564",
+    "modified": "2025-12-09 12:10:02.261564",
     "modified_by": "Administrator",
     "module": "GenMedAI",
     "name": "GenMedAI",
-    "number_cards": [
-        {
-            "label": "Active Users",
-            "number_card_name": "Active Users"
-        },
-        {
-            "label": "Verified Profiles",
-            "number_card_name": "Verified Profiles"
-        },
-        {
-            "label": "Unverified Profiles",
-            "number_card_name": "Unverified Profiles"
-        }
-    ],
+    "number_cards": [],
     "owner": "Administrator",
     "parent_page": "",
     "public": 1,
@@ -73,17 +60,8 @@
             "color": "Blue",
             "doc_view": "",
             "format": "",
-            "label": "ProfileCard",
-            "link_to": "ProfileCard",
-            "type": "DocType",
-            "url": ""
-        },
-        {
-            "color": "Blue",
-            "doc_view": "",
-            "format": "",
-            "label": "Sponsored Content",
-            "link_to": "Sponsored Content",
+            "label": "Medicine",
+            "link_to": "Medicine",
             "type": "DocType",
             "url": ""
         }
