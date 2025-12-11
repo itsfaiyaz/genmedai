@@ -270,7 +270,22 @@ website_route_rules = [
     {"from_route": "/app", "to_route": "app"},
     {"from_route": "/app/<path:app_path>", "to_route": "app"},
 
+    # Specific pages needing routing to frontend
+    {"from_route": "/search", "to_route": "frontend"},
+    {"from_route": "/my-account", "to_route": "frontend"},
+    {"from_route": "/how-it-works", "to_route": "frontend"},
+    {"from_route": "/faqs", "to_route": "frontend"},
+    {"from_route": "/privacy-policy", "to_route": "frontend"},
+    {"from_route": "/terms", "to_route": "frontend"},
+
+    # Explicitly catch /api calls to prevent them falling into the frontend catch-all
+    # We map them to non-existent 'dispatcher' which usually forces standard handling or 404 
+    # instead of rendering the 'frontend' html. 
+    # Ideally, API calls are handled before this list, but for 404s/Errors this helps.
+    # {"from_route": "/api/<path:rest>", "to_route": "dispatcher"},
+
     # Catch-all - MUST be last
+    # This rule directs all valid non-api, non-app paths to the frontend (React)
     {"from_route": "/<path:app_path>", "to_route": "frontend"},
 ]
 
@@ -298,3 +313,31 @@ website_route_rules = [
 #     {"from_route": "/app", "to_route": "/app"},
 #     {"from_route": "/app/<path:app_path>", "to_route": "/app/<path:app_path>"},
 # ]
+
+
+# 2
+# website_route_rules = [
+#     {"from_route": "/update-password", "to_route": "frontend"},
+#     # for login and signup register also
+#     {"from_route": "/login", "to_route": "frontend"},
+#     {"from_route": "/register", "to_route": "frontend"},
+#     {"from_route": "/forgot-password", "to_route": "frontend"},
+#     {"from_route": "/frontend/<path:app_path>", "to_route": "frontend"},
+#     {"from_route": "/frontend", "to_route": "frontend"},
+
+#     #contact and about us page
+#     {"from_route": "/contact", "to_route": "frontend"},
+#     {"from_route": "/about", "to_route": "frontend"},
+    
+#     # 404 page
+#     {"from_route": "/404", "to_route": "frontend"},
+#     {"from_route": "/index", "to_route": "/"},
+    
+#     # allow app - MUST be before catch-all
+#     {"from_route": "/app", "to_route": "app"},
+#     {"from_route": "/app/<path:app_path>", "to_route": "app"},
+
+#     # Catch-all - MUST be last
+#     {"from_route": "/<path:app_path>", "to_route": "frontend"},
+# ]
+

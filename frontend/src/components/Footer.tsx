@@ -1,34 +1,22 @@
 import { Pill, Heart, Facebook, Twitter, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useFrappeAuth, useFrappeGetDoc, useFrappeGetDocList } from 'frappe-react-sdk';
+import { useFrappeAuth, useFrappePostCall } from 'frappe-react-sdk';
 import { useEffect } from 'react';
 
 const Footer = () => {
     const { currentUser } = useFrappeAuth();
     const isLoggedIn = currentUser && currentUser !== 'Guest';
 
-    // Fetch current user to get their assigned roles
-    const { data: userDoc, mutate: mutateUserDoc } = useFrappeGetDoc('User', currentUser || undefined, {
-        enabled: !!currentUser && currentUser !== 'Guest'
-    });
+    // Check Desk Access via API
+    const { call: checkDeskAccess, result: deskAccessResult } = useFrappePostCall('genmedai.api.has_desk_access');
 
     useEffect(() => {
         if (currentUser && currentUser !== 'Guest') {
-            mutateUserDoc();
+            checkDeskAccess({});
         }
     }, [currentUser]);
 
-    // Fetch all roles that have Desk Access
-    const { data: deskRoles } = useFrappeGetDocList('Role', {
-        fields: ['name'],
-        filters: [['desk_access', '=', 1]],
-        limit: 1000
-    });
-
-    // Check if the user has any role that grants Desk Access
-    const hasDeskAccess = userDoc?.roles?.some((userRole: any) =>
-        deskRoles?.some(deskRole => deskRole.name === userRole.role)
-    ) || false;
+    const hasDeskAccess = !!deskAccessResult?.message?.allowed;
 
     return (
         <footer className="bg-gray-900 text-white pt-16 pb-8 border-t border-gray-800">

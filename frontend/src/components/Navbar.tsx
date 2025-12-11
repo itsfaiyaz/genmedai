@@ -1,4 +1,4 @@
-import { useFrappeAuth, useFrappeGetDoc, useFrappeGetDocList } from 'frappe-react-sdk';
+import { useFrappeAuth, useFrappeGetDoc, useFrappeGetDocList, useFrappePostCall } from 'frappe-react-sdk';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { LogOut, Menu, X, ChevronDown, LayoutDashboard, Settings, Pill, User, Search } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -25,6 +25,10 @@ const Navbar = () => {
         enabled: !!currentUser && currentUser !== 'Guest'
     });
 
+    const { data: portalSettings } = useFrappeGetDoc('Portal Settings', 'Portal Settings', {
+        enabled: !!currentUser && currentUser !== 'Guest'
+    });
+
     useEffect(() => {
         if (currentUser && currentUser !== 'Guest') {
             mutateUserDoc();
@@ -38,17 +42,16 @@ const Navbar = () => {
         }
     }, [isSearchOpen]);
 
-    // Fetch all roles that have Desk Access
-    const { data: deskRoles } = useFrappeGetDocList('Role', {
-        fields: ['name'],
-        filters: [['desk_access', '=', 1]],
-        limit: 1000
-    });
+    // Check Desk Access via API
+    const { call: checkDeskAccess, result: deskAccessResult } = useFrappePostCall('genmedai.api.has_desk_access');
 
-    // Check if the user has any role that grants Desk Access
-    const hasDeskAccess = userDoc?.roles?.some((userRole: any) =>
-        deskRoles?.some(deskRole => deskRole.name === userRole.role)
-    ) || false;
+    useEffect(() => {
+        if (currentUser && currentUser !== 'Guest') {
+            checkDeskAccess({});
+        }
+    }, [currentUser]);
+
+    const hasDeskAccess = !!deskAccessResult?.message?.allowed;
 
     const userProfile = userProfileList?.[0];
 
@@ -82,12 +85,50 @@ const Navbar = () => {
         return (currentUser || 'U').charAt(0).toUpperCase();
     };
 
-    const navItems = [
+    const defaultNavItems = [
         { name: 'Home', path: '/' },
         { name: 'Search', path: '/search' },
         { name: 'About', path: '/about' },
         { name: 'Contact', path: '/contact' },
     ];
+
+    const getNavItems = () => {
+        if (!portalSettings || !isLoggedIn) return defaultNavItems;
+
+        let items: { name: string; path: string }[] = [];
+        // If hide_standard_menu is false (0) or undefined, include default items
+        if (!portalSettings.hide_standard_menu) {
+            items = [...defaultNavItems];
+        }
+
+        if (portalSettings.menu) {
+            const userRoles = userDoc?.roles?.map((r: any) => r.role) || [];
+            // Always include Guest role checks if needed, but here we assume logged in users have their roles
+
+            const dynamicItems = portalSettings.menu.filter((item: any) => {
+                if (!item.enabled) return false;
+                // If no role specified, show to everyone? Or if role matches.
+                if (!item.role) return true;
+                return userRoles.includes(item.role);
+            }).map((item: any) => ({
+                name: item.title,
+                path: item.route
+            }));
+
+            // Avoid duplicates if any
+            const existingPaths = new Set(items.map(i => i.path));
+            dynamicItems.forEach((item: any) => {
+                if (!existingPaths.has(item.path)) {
+                    items.push(item);
+                    existingPaths.add(item.path);
+                }
+            });
+        }
+
+        return items.length > 0 ? items : defaultNavItems;
+    };
+
+    const navItems = getNavItems();
 
     return (
         <nav className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 shadow-sm transition-all duration-300">

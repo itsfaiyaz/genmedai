@@ -146,8 +146,15 @@ def register_user(email, full_name, mobile_no, gender, redirect_to=None):
     user.mobile_no = mobile_no
     user.gender = gender
     
-    # Create and assign role
-    role_name = "GenMedAI Member"
+    # Dynamic Role Assignment from Portal Settings
+    role_name = "GenMedAI Member" # Fallback
+    try:
+        portal_settings = frappe.get_doc("Portal Settings", "Portal Settings")
+        if portal_settings.get("default_role"):
+            role_name = portal_settings.get("default_role")
+    except Exception:
+        pass
+
     if not frappe.db.exists("Role", role_name):
         role = frappe.new_doc("Role")
         role.role_name = role_name
@@ -418,3 +425,30 @@ def translate_text(text, target_language="Hindi"):
     
     prompt = f"Translate the following medical text to {target_language}. Keep it simple and easy to understand. Return ONLY the translated text.\n\nText: {text}"
     return query_ai(prompt)
+
+@frappe.whitelist(allow_guest=True)
+def has_desk_access():
+    user = frappe.session.user
+    if user == "Guest":
+        return {"allowed": False}
+
+    # 1. Get user roles
+    user_roles = frappe.get_roles(user)
+    
+    # 2. Get all desk-access roles (ignoring permissions)
+    # Exclude 'All' and 'Guest' because they might technically have desk_access=1 
+    # in some setups but shouldn't grant UI access in this context.
+    desk_roles = frappe.get_all(
+        "Role",
+        filters={
+            "desk_access": 1, 
+            "name": ["not in", ["All", "Guest"]]
+        },
+        pluck="name",
+        ignore_permissions=True
+    )
+    
+    # 3. Filter only desk-access roles the user actually has
+    user_desk_roles = list(set(user_roles).intersection(desk_roles))
+    
+    return {"allowed": bool(user_desk_roles)}

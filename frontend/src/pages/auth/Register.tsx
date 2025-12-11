@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useFrappePostCall, useFrappeAuth } from 'frappe-react-sdk';
+import { useFrappePostCall, useFrappeAuth, useFrappeGetDoc } from 'frappe-react-sdk';
 import { Link, useLocation } from 'react-router-dom';
 import { User, Mail, Loader2, CheckCircle, Phone, AlertCircle } from 'lucide-react';
 
@@ -15,6 +15,30 @@ const Register = () => {
     const [gender, setGender] = useState('');
     const [success, setSuccess] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+
+    const { data: websiteSettings } = useFrappeGetDoc('Website Settings', 'Website Settings');
+
+    if (websiteSettings?.disable_signup) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4 transition-colors duration-300">
+                <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-white/20 dark:border-gray-700 p-8 text-center">
+                    <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 dark:bg-red-900/30 mb-6">
+                        <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Registration Disabled</h2>
+                    <p className="text-gray-600 dark:text-gray-400 mb-8">
+                        New user registration is currently disabled by the administrator.
+                    </p>
+                    <Link
+                        to="/login"
+                        className="inline-flex items-center justify-center w-full px-4 py-2.5 border border-transparent text-sm font-bold rounded-xl text-white bg-gradient-to-r from-[#3B82F6] to-[#2DD4BF] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2DD4BF] transition-all"
+                    >
+                        Back to Login
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     if (currentUser && currentUser !== 'Guest') {
         return (

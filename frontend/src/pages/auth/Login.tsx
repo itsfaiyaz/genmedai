@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useFrappeAuth } from 'frappe-react-sdk';
+import { useFrappeAuth, useFrappeGetDoc } from 'frappe-react-sdk';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Lock, User, Loader2, Pill } from 'lucide-react';
 
 const Login = () => {
     const { login, currentUser, isLoading } = useFrappeAuth();
+    const { data: websiteSettings } = useFrappeGetDoc('Website Settings', 'Website Settings');
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -21,6 +22,40 @@ const Login = () => {
             setRememberMe(true);
         }
     }, []);
+
+    const checkAndRedirect = async () => {
+        try {
+            // Use the custom API to check desk access securely
+            const response = await fetch('/api/method/genmedai.api.has_desk_access', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Frappe-CSRF-Token': (window as any).csrf_token || ''
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.message && data.message.allowed) {
+                    window.location.href = '/app';
+                    return;
+                }
+            }
+
+            // Fallback to home if no desk access or error
+            window.location.href = '/';
+
+        } catch (e) {
+            console.error("Error checking redirect:", e);
+            window.location.href = '/';
+        }
+    };
+
+    useEffect(() => {
+        if (currentUser) {
+            checkAndRedirect();
+        }
+    }, [currentUser]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,7 +74,16 @@ const Login = () => {
                 localStorage.removeItem('rememberedEmail');
             }
 
-            window.location.href = '/';
+            // Login successful. 
+            // If response contains user info, usage might vary, but currentUser effect will trigger.
+            // However, to be fast and immediate, we can try to check here too or just wait for effect.
+            // Using checkAndRedirect with the email (or response user if available) is better.
+            // The login hook updates currentUser, triggering the effect.
+            // But if we want to be sure, we can call checkAndRedirect explicitly if we know the user ID.
+
+            // Note: login() returns a Promise. When it resolves, currentUser might not be updated *immediately* in this scope?
+            // Usually simpler to let the effect handle it.
+
         } catch (e: any) {
             setError('Invalid email or password');
             setLoading(false);
@@ -47,8 +91,14 @@ const Login = () => {
     };
 
     if (currentUser) {
-        window.location.href = '/';
-        return null;
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="h-8 w-8 animate-spin text-[#2DD4BF]" />
+                    <p className="text-gray-500 dark:text-gray-400">Redirecting...</p>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -155,14 +205,18 @@ const Login = () => {
                                 <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">Don't have an account?</span>
+                                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                                    {(websiteSettings?.disable_signup) ? 'Have an account?' : "Don't have an account?"}
+                                </span>
                             </div>
                         </div>
-                        <div className="mt-6 text-center">
-                            <Link to="/register" className="font-bold text-[#2DD4BF] hover:text-[#14B8A6] transition-colors">
-                                Create an account
-                            </Link>
-                        </div>
+                        {!websiteSettings?.disable_signup && (
+                            <div className="mt-6 text-center">
+                                <Link to="/register" className="font-bold text-[#2DD4BF] hover:text-[#14B8A6] transition-colors">
+                                    Create an account
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
