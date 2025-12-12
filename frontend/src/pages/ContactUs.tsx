@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Send, Loader2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Loader2, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useFrappeGetDoc, useFrappePostCall } from 'frappe-react-sdk';
@@ -10,6 +10,7 @@ const ContactUs = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [queryType, setQueryType] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
 
     // API Call for submission
     const { call: submitQuery, loading: isSubmitting } = useFrappePostCall('genmedai.api.submit_contact_query');
@@ -51,11 +52,13 @@ const ContactUs = () => {
                 query_type: queryType || queryOptions[0]
             });
 
-            // Success handling (Simple alert for now, could be toast)
-            alert("Thanks! Your message has been sent successfully.");
+            setIsSuccess(true);
             setEmail('');
             setMessage('');
             setQueryType('');
+
+            // Allow sending another message after a delay if needed, or just leave success state
+            // setTimeout(() => setIsSuccess(false), 5000); 
         } catch (error: any) {
             console.error("Submission Error:", error);
             // Frappe often returns error.message or error.exception variants
@@ -136,70 +139,89 @@ const ContactUs = () => {
                         </div>
                     </div>
 
-                    {/* Contact Form */}
-                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-xl shadow-gray-100/50 dark:shadow-none">
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send a Message</h2>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-
-                            {/* Query Type Dropdown */}
-                            {queryOptions.length > 0 && (
-                                <div>
-                                    <label htmlFor="queryType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Topic
-                                    </label>
-                                    <select
-                                        id="queryType"
-                                        value={queryType}
-                                        onChange={(e) => setQueryType(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 border focus:ring-2 focus:ring-brand-teal outline-none transition-all dark:text-white"
-                                    >
-                                        <option value="" disabled>Select a topic</option>
-                                        {queryOptions.map((opt: string) => (
-                                            <option key={opt} value={opt}>{opt}</option>
-                                        ))}
-                                    </select>
+                    {/* Contact Form or Success State */}
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-xl shadow-gray-100/50 dark:shadow-none min-h-[500px] flex flex-col justify-center">
+                        {isSuccess ? (
+                            <div className="text-center py-12 animate-in fade-in zoom-in duration-500">
+                                <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <CheckCircle className="w-10 h-10" />
                                 </div>
-                            )}
-
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Your Email
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 border focus:ring-2 focus:ring-brand-teal outline-none transition-all dark:text-white"
-                                    placeholder="name@example.com"
-                                    required
-                                />
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Message Sent!</h3>
+                                <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-sm mx-auto">
+                                    Thank you for contacting us. We have received your message and will get back to you shortly.
+                                </p>
+                                <button
+                                    onClick={() => setIsSuccess(false)}
+                                    className="px-8 py-3 bg-brand-gradient text-white font-bold rounded-xl shadow-lg hover:shadow-brand-blue/30 hover:-translate-y-1 transition-all"
+                                >
+                                    Send Another Message
+                                </button>
                             </div>
+                        ) : (
+                            <>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send a Message</h2>
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                    {/* Query Type Dropdown */}
+                                    {queryOptions.length > 0 && (
+                                        <div>
+                                            <label htmlFor="queryType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                Topic
+                                            </label>
+                                            <select
+                                                id="queryType"
+                                                value={queryType}
+                                                onChange={(e) => setQueryType(e.target.value)}
+                                                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 border focus:ring-2 focus:ring-brand-teal outline-none transition-all dark:text-white"
+                                            >
+                                                <option value="" disabled>Select a topic</option>
+                                                {queryOptions.map((opt: string) => (
+                                                    <option key={opt} value={opt}>{opt}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
 
-                            <div>
-                                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Message
-                                </label>
-                                <textarea
-                                    id="message"
-                                    rows={4}
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 border focus:ring-2 focus:ring-brand-teal outline-none transition-all dark:text-white resize-none"
-                                    placeholder="How can we help you?"
-                                    required
-                                />
-                            </div>
+                                    <div>
+                                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Your Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 border focus:ring-2 focus:ring-brand-teal outline-none transition-all dark:text-white"
+                                            placeholder="name@example.com"
+                                            required
+                                        />
+                                    </div>
 
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="w-full py-4 bg-brand-gradient text-white font-bold rounded-xl shadow-lg hover:shadow-brand-blue/30 hover:-translate-y-1 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                            >
-                                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-                                {isSubmitting ? "Sending..." : "Send Message"}
-                            </button>
-                        </form>
+                                    <div>
+                                        <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Message
+                                        </label>
+                                        <textarea
+                                            id="message"
+                                            rows={4}
+                                            value={message}
+                                            onChange={(e) => setMessage(e.target.value)}
+                                            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 border focus:ring-2 focus:ring-brand-teal outline-none transition-all dark:text-white resize-none"
+                                            placeholder="How can we help you?"
+                                            required
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="w-full py-4 bg-brand-gradient text-white font-bold rounded-xl shadow-lg hover:shadow-brand-blue/30 hover:-translate-y-1 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    >
+                                        {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                                        {isSubmitting ? "Sending..." : "Send Message"}
+                                    </button>
+                                </form>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

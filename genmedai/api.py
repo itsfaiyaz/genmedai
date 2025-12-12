@@ -447,6 +447,9 @@ def has_desk_access():
         pluck="name",
         ignore_permissions=True
     )
+from genmedai.emails.admin_notification import get_admin_email_content
+from genmedai.emails.user_reply import get_user_reply_content
+
 @frappe.whitelist(allow_guest=True)
 def submit_contact_query(email, message, query_type="Other"):
     if not email or not message:
@@ -470,26 +473,27 @@ def submit_contact_query(email, message, query_type="Other"):
     })
     doc.insert(ignore_permissions=True)
     
-    # 3. Send Email
+    # 3. Send Email to Admin
     subject = f"GenMedAI: New Inquiry - {query_type}"
-    
-    email_content = f"""
-    <h3>New Inquiry Received</h3>
-    <p><strong>From:</strong> {email}</p>
-    <p><strong>Type:</strong> {query_type}</p>
-    <p><strong>Date:</strong> {frappe.utils.format_datetime(doc.submission_date, 'medium')}</p>
-    <hr>
-    <p><strong>Message:</strong></p>
-    <p>{message}</p>
-    <br>
-    <p><em>This query has been saved to the Contact Query database (Ref: {doc.name}).</em></p>
-    """
+    email_content = get_admin_email_content(email, query_type, message, doc.name, doc.submission_date)
     
     frappe.sendmail(
         recipients=[forward_email],
         reply_to=email,
         subject=subject,
-        message=email_content
+        message=email_content,
+        now=True
+    )
+    
+    # 4. Send Auto-Reply to User
+    reply_subject = "We received your message - GenMedAI"
+    reply_message = get_user_reply_content(query_type)
+    
+    frappe.sendmail(
+        recipients=[email],
+        subject=reply_subject,
+        message=reply_message,
+        now=True
     )
     
     return {"status": "success", "message": "Your message has been sent successfully."}
