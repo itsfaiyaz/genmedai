@@ -427,6 +427,11 @@ def translate_text(text, target_language="Hindi"):
     return query_ai(prompt)
 
 @frappe.whitelist(allow_guest=True)
+def get_contact_us_settings():
+    """Fetch Contact Us Settings for public display."""
+    return frappe.get_doc("Contact Us Settings", "Contact Us Settings")
+
+@frappe.whitelist(allow_guest=True)
 def has_desk_access():
     user = frappe.session.user
     if user == "Guest":

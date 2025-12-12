@@ -1,10 +1,11 @@
 import { Mail, Phone, MapPin, Send, Loader2, CheckCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useFrappeGetDoc, useFrappePostCall } from 'frappe-react-sdk';
 
 const ContactUs = () => {
-    const { data: settings, isLoading: isSettingsLoading } = useFrappeGetDoc('Contact Us Settings', 'Contact Us Settings');
+    // Fetch settings via public API to allow guests
+    const { call: fetchSettings, result: settingsResult, loading: isSettingsLoading } = useFrappePostCall('genmedai.api.get_contact_us_settings');
 
     // Form state
     const [email, setEmail] = useState('');
@@ -15,13 +16,20 @@ const ContactUs = () => {
     // API Call for submission
     const { call: submitQuery, loading: isSubmitting } = useFrappePostCall('genmedai.api.submit_contact_query');
 
+    // Load settings on mount
+    useEffect(() => {
+        fetchSettings({});
+    }, []);
+
+    const settings = settingsResult?.message; // API returns the doc directly, usually wrapped in message
+
     // Parse query options
     const queryOptions = settings?.query_options
         ? settings.query_options.split('\n').filter((o: string) => o.trim())
         : ['General Inquiry'];
 
-    // If settings not loaded or no forward email, hide sensitive contact parts or show loader
-    if (isSettingsLoading) {
+    // If settings not loaded (and not yet fetched), show loader
+    if (isSettingsLoading || (!settings && !settingsResult)) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
                 <Loader2 className="h-8 w-8 animate-spin text-brand-teal" />
@@ -29,9 +37,19 @@ const ContactUs = () => {
         );
     }
 
+    if (!settings && settingsResult && !settingsResult.message) {
+        // Settings fetch returned empty/null
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950">
+                <div className="text-center p-8">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Contact Unavailable</h1>
+                    <p className="text-gray-500">Could not load contact settings.</p>
+                </div>
+            </div>
+        );
+    }
+
     if (!settings?.forward_to_email) {
-        // User requested: "if not have mentioned forward to email address in this means contact us not show"
-        // We can show a maintenance or generic message, or returning null to hide.
         return (
             <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950">
                 <div className="text-center p-8">
@@ -57,14 +75,8 @@ const ContactUs = () => {
             setMessage('');
             setQueryType('');
 
-            // Allow sending another message after a delay if needed, or just leave success state
-            // setTimeout(() => setIsSuccess(false), 5000); 
         } catch (error: any) {
             console.error("Submission Error:", error);
-            // Frappe often returns error.message or error.exception variants
-            // If it's a Frappe error object, it might have 'message' or 'exception' properties inside response JSON, 
-            // but useFrappePostCall usually throws the error object directly or wraps it.
-            // Let's try to extract a readable message.
             const errorMsg = error?.message || error?.exception || "Something went wrong. Please try again later.";
             alert(`Error: ${errorMsg}`);
         }
@@ -161,6 +173,7 @@ const ContactUs = () => {
                             <>
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send a Message</h2>
                                 <form onSubmit={handleSubmit} className="space-y-6">
+
                                     {/* Query Type Dropdown */}
                                     {queryOptions.length > 0 && (
                                         <div>
