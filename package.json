@@ -1,0 +1,10 @@
+{
+    "name": "genmedai",
+    "version": "0.0.1",
+    "description": "GenMedAI App",
+    "scripts": {
+        "build": "cd frontend && yarn install && yarn build"
+    },
+    "dependencies": {},
+    "devDependencies": {}
+}
