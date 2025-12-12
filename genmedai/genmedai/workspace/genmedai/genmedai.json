@@ -1,70 +1,70 @@
 {
-    "charts": [],
-    "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Quick Access</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Medicine\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}}]",
-    "creation": "2024-12-01 11:53:06",
-    "custom_blocks": [],
-    "docstatus": 0,
-    "doctype": "Workspace",
-    "for_user": "",
-    "hide_custom": 0,
-    "icon": "users",
-    "idx": 0,
-    "is_hidden": 0,
-    "label": "GenMedAI",
-    "links": [
-        {
-            "hidden": 0,
-            "is_query_report": 0,
-            "label": "Masters",
-            "link_count": 0,
-            "link_type": "DocType",
-            "onboard": 0,
-            "type": "Card Break"
-        },
-        {
-            "dependencies": "",
-            "hidden": 0,
-            "is_query_report": 0,
-            "label": "Medicine",
-            "link_count": 0,
-            "link_to": "Medicine",
-            "link_type": "DocType",
-            "onboard": 0,
-            "type": "Link"
-        },
-        {
-            "dependencies": "",
-            "hidden": 0,
-            "is_query_report": 0,
-            "label": "GenMedAI Settings",
-            "link_count": 0,
-            "link_to": "GenMedAI Settings",
-            "link_type": "DocType",
-            "onboard": 0,
-            "type": "Link"
-        }
-    ],
-    "modified": "2025-12-09 12:10:02.261564",
-    "modified_by": "Administrator",
-    "module": "GenMedAI",
-    "name": "GenMedAI",
-    "number_cards": [],
-    "owner": "Administrator",
-    "parent_page": "",
-    "public": 1,
-    "quick_lists": [],
-    "roles": [],
-    "sequence_id": 1.0,
-    "shortcuts": [
-        {
-            "color": "Blue",
-            "doc_view": "",
-            "format": "",
-            "label": "Medicine",
-            "link_to": "Medicine",
-            "type": "DocType",
-            "url": ""
-        }
-    ],
-    "title": "GenMedAI"
+ "charts": [],
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Quick Access</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Medicine\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}}]",
+ "creation": "2024-12-01 11:53:06",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "users",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "GenMedAI",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Masters",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Medicine",
+   "link_count": 0,
+   "link_to": "Medicine",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "GenMedAI Settings",
+   "link_count": 0,
+   "link_to": "GenMedAI Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2025-12-12 11:44:28.106174",
+ "modified_by": "Administrator",
+ "module": "GenMedAI",
+ "name": "GenMedAI",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "format": "",
+   "label": "Medicine",
+   "link_to": "Medicine",
+   "type": "DocType",
+   "url": ""
+  }
+ ],
+ "title": "GenMedAI"
 }

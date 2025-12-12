@@ -447,8 +447,49 @@ def has_desk_access():
         pluck="name",
         ignore_permissions=True
     )
+@frappe.whitelist(allow_guest=True)
+def submit_contact_query(email, message, query_type="Other"):
+    if not email or not message:
+        frappe.throw("Email and Message are required")
+
+    # 1. Fetch Settings
+    settings = frappe.get_doc("Contact Us Settings", "Contact Us Settings")
+    forward_email = settings.forward_to_email
     
-    # 3. Filter only desk-access roles the user actually has
-    user_desk_roles = list(set(user_roles).intersection(desk_roles))
+    if not forward_email:
+        frappe.throw("Contact configuration missing (Forward Email not set).")
+
+    # 2. Store in Database
+    doc = frappe.get_doc({
+        "doctype": "Contact Query",
+        "email": email,
+        "query_type": query_type,
+        "message": message,
+        "submission_date": frappe.utils.now_datetime(),
+        "status": "Open"
+    })
+    doc.insert(ignore_permissions=True)
     
-    return {"allowed": bool(user_desk_roles)}
+    # 3. Send Email
+    subject = f"GenMedAI: New Inquiry - {query_type}"
+    
+    email_content = f"""
+    <h3>New Inquiry Received</h3>
+    <p><strong>From:</strong> {email}</p>
+    <p><strong>Type:</strong> {query_type}</p>
+    <p><strong>Date:</strong> {frappe.utils.format_datetime(doc.submission_date, 'medium')}</p>
+    <hr>
+    <p><strong>Message:</strong></p>
+    <p>{message}</p>
+    <br>
+    <p><em>This query has been saved to the Contact Query database (Ref: {doc.name}).</em></p>
+    """
+    
+    frappe.sendmail(
+        recipients=[forward_email],
+        reply_to=email,
+        subject=subject,
+        message=email_content
+    )
+    
+    return {"status": "success", "message": "Your message has been sent successfully."}
