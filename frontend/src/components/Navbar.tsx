@@ -1,4 +1,4 @@
-import { useFrappeAuth, useFrappeGetDoc, useFrappeGetDocList, useFrappePostCall } from 'frappe-react-sdk';
+import { useFrappeAuth, useFrappeGetDoc, useFrappePostCall } from 'frappe-react-sdk';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { LogOut, Menu, X, ChevronDown, LayoutDashboard, Settings, Pill, User, Search } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -14,11 +14,7 @@ const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const searchInputRef = useRef<HTMLInputElement>(null);
 
-    // Fetch the full user profile (name, image) for display
-    const { data: userProfileList } = useFrappeGetDocList('User', {
-        filters: [['name', '=', currentUser || '']],
-        fields: ['full_name', 'user_image']
-    });
+
 
     // Fetch current user doc to get roles (logic from Footer)
     const { data: userDoc, mutate: mutateUserDoc } = useFrappeGetDoc('User', currentUser || undefined, {
@@ -53,7 +49,7 @@ const Navbar = () => {
 
     const hasDeskAccess = !!deskAccessResult?.message?.allowed;
 
-    const userProfile = userProfileList?.[0];
+    const userProfile = userDoc;
 
     const handleLogout = async () => {
         try {

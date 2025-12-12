@@ -5,7 +5,7 @@ import { useFrappeGetDoc, useFrappePostCall } from 'frappe-react-sdk';
 
 const ContactUs = () => {
     // Fetch settings via public API to allow guests
-    const { call: fetchSettings, result: settingsResult, loading: isSettingsLoading } = useFrappePostCall('genmedai.api.get_contact_us_settings');
+    const { call: fetchSettings, result: settingsResult, loading: isSettingsLoading, error: settingsError } = useFrappePostCall('genmedai.api.get_contact_us_settings');
 
     // Form state
     const [email, setEmail] = useState('');
@@ -29,7 +29,7 @@ const ContactUs = () => {
         : ['General Inquiry'];
 
     // If settings not loaded (and not yet fetched), show loader
-    if (isSettingsLoading || (!settings && !settingsResult)) {
+    if (isSettingsLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
                 <Loader2 className="h-8 w-8 animate-spin text-brand-teal" />
@@ -37,13 +37,13 @@ const ContactUs = () => {
         );
     }
 
-    if (!settings && settingsResult && !settingsResult.message) {
-        // Settings fetch returned empty/null
+    if (settingsError || (!settings && !isSettingsLoading)) {
+        // Settings fetch returned empty/null or failed
         return (
             <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950">
                 <div className="text-center p-8">
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Contact Unavailable</h1>
-                    <p className="text-gray-500">Could not load contact settings.</p>
+                    <p className="text-gray-500">Could not load contact settings. Please try again later.</p>
                 </div>
             </div>
         );

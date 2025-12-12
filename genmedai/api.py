@@ -437,21 +437,12 @@ def has_desk_access():
     if user == "Guest":
         return {"allowed": False}
 
-    # 1. Get user roles
-    user_roles = frappe.get_roles(user)
-    
-    # 2. Get all desk-access roles (ignoring permissions)
-    # Exclude 'All' and 'Guest' because they might technically have desk_access=1 
-    # in some setups but shouldn't grant UI access in this context.
-    desk_roles = frappe.get_all(
-        "Role",
-        filters={
-            "desk_access": 1, 
-            "name": ["not in", ["All", "Guest"]]
-        },
-        pluck="name",
-        ignore_permissions=True
-    )
+    if user == "Administrator":
+        return {"allowed": True}
+
+    # "System User" type is the standard definition for Desk Access in Frappe
+    user_type = frappe.db.get_value("User", user, "user_type")
+    return {"allowed": user_type == "System User"}
 from genmedai.emails.admin_notification import get_admin_email_content
 from genmedai.emails.user_reply import get_user_reply_content
 
