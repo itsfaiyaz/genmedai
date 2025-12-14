@@ -1,18 +1,30 @@
-import { Mail, Phone, MapPin, Send, Loader2, CheckCircle } from 'lucide-react';
-import { useState } from 'react';
+import { Mail, Phone, MapPin, Send, Loader2, CheckCircle, RefreshCw } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useFrappeGetCall, useFrappePostCall } from 'frappe-react-sdk';
 
 const ContactUs = () => {
     // Fetch settings via public API to allow guests
     // Using getCall handles the loading state immediately on mount vs postCall which has a delay
-    const { data: settingsResult, isLoading: isSettingsLoading, error: settingsError } = useFrappeGetCall('genmedai.api.get_contact_us_settings');
+    const { data: settingsResult, isLoading: isSettingsLoading, error: settingsError, mutate } = useFrappeGetCall('genmedai.api.get_contact_us_settings');
 
     // Form state
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [queryType, setQueryType] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
+    const [retryCount, setRetryCount] = useState(0);
+
+    // Auto-retry logic for fetching settings
+    useEffect(() => {
+        if (settingsError && retryCount < 5) {
+            const timer = setTimeout(() => {
+                setRetryCount(prev => prev + 1);
+                mutate();
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [settingsError, retryCount, mutate]);
 
     // API Call for submission
     const { call: submitQuery, loading: isSubmitting } = useFrappePostCall('genmedai.api.submit_contact_query');
@@ -39,7 +51,17 @@ const ContactUs = () => {
             <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950">
                 <div className="text-center p-8">
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Contact Unavailable</h1>
-                    <p className="text-gray-500">Could not load contact settings. Please try again later.</p>
+                    <p className="text-gray-500 mb-6">Could not load contact settings. Please try again later.</p>
+                    <button
+                        onClick={() => {
+                            setRetryCount(0);
+                            mutate();
+                        }}
+                        className="inline-flex items-center gap-2 px-6 py-2 bg-brand-teal text-white font-medium rounded-lg hover:bg-brand-teal/90 transition-colors"
+                    >
+                        <RefreshCw className="w-4 h-4" />
+                        Retry
+                    </button>
                 </div>
             </div>
         );
