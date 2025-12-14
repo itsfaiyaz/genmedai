@@ -1,11 +1,12 @@
 import { Mail, Phone, MapPin, Send, Loader2, CheckCircle } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { useFrappeGetDoc, useFrappePostCall } from 'frappe-react-sdk';
+import { useFrappeGetCall, useFrappePostCall } from 'frappe-react-sdk';
 
 const ContactUs = () => {
     // Fetch settings via public API to allow guests
-    const { call: fetchSettings, result: settingsResult, loading: isSettingsLoading, error: settingsError } = useFrappePostCall('genmedai.api.get_contact_us_settings');
+    // Using getCall handles the loading state immediately on mount vs postCall which has a delay
+    const { data: settingsResult, isLoading: isSettingsLoading, error: settingsError } = useFrappeGetCall('genmedai.api.get_contact_us_settings');
 
     // Form state
     const [email, setEmail] = useState('');
@@ -15,11 +16,6 @@ const ContactUs = () => {
 
     // API Call for submission
     const { call: submitQuery, loading: isSubmitting } = useFrappePostCall('genmedai.api.submit_contact_query');
-
-    // Load settings on mount
-    useEffect(() => {
-        fetchSettings({});
-    }, []);
 
     const settings = settingsResult?.message; // API returns the doc directly, usually wrapped in message
 
