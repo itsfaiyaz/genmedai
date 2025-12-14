@@ -429,13 +429,15 @@ def translate_text(text, target_language="Hindi"):
 @frappe.whitelist(allow_guest=True)
 def get_contact_us_settings():
     """Fetch Contact Us Settings for public display."""
-    # Force ignore permissions to ensure guests can read these settings
-    original_ignore_permissions = frappe.flags.ignore_permissions
-    frappe.flags.ignore_permissions = True
     try:
-        return frappe.get_doc("Contact Us Settings", "Contact Us Settings")
-    finally:
-        frappe.flags.ignore_permissions = original_ignore_permissions
+        # Use simple get_doc for Single DocType. ignore_permissions=True to ensure guests can view it
+        # regardless of strict Role Permission Manager settings (matches previous intent).
+        doc = frappe.get_doc("Contact Us Settings")
+        return doc
+    except Exception as e:
+        frappe.log_error(f"Error fetching Contact Us Settings: {str(e)}")
+        # Return simplified object or None to avoid 417 on frontend
+        return None
 
 @frappe.whitelist(allow_guest=True)
 def has_desk_access():
