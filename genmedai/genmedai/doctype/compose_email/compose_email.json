@@ -1,0 +1,106 @@
+{
+    "actions": [],
+    "creation": "2025-12-15 00:00:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "recipient_section",
+        "send_to_option",
+        "recipient_user",
+        "recipient_email",
+        "content_section",
+        "subject",
+        "attachment",
+        "message",
+        "action_section",
+        "send_email",
+        "clear_fields"
+    ],
+    "fields": [
+        {
+            "fieldname": "recipient_section",
+            "fieldtype": "Section Break",
+            "label": "Recipient Details"
+        },
+        {
+            "default": "User",
+            "fieldname": "send_to_option",
+            "fieldtype": "Select",
+            "label": "Send To",
+            "options": "User\nEmail Address"
+        },
+        {
+            "depends_on": "eval:doc.send_to_option=='User'",
+            "fieldname": "recipient_user",
+            "fieldtype": "Link",
+            "label": "Select User",
+            "options": "User"
+        },
+        {
+            "depends_on": "eval:doc.send_to_option=='Email Address'",
+            "fieldname": "recipient_email",
+            "fieldtype": "Data",
+            "label": "Email Address",
+            "options": "Email"
+        },
+        {
+            "fieldname": "content_section",
+            "fieldtype": "Section Break",
+            "label": "Email Content"
+        },
+        {
+            "fieldname": "subject",
+            "fieldtype": "Data",
+            "label": "Subject",
+            "reqd": 1
+        },
+        {
+            "fieldname": "attachment",
+            "fieldtype": "Attach",
+            "label": "Attachment"
+        },
+        {
+            "fieldname": "message",
+            "fieldtype": "Text Editor",
+            "label": "Message",
+            "reqd": 1
+        },
+        {
+            "fieldname": "action_section",
+            "fieldtype": "Section Break",
+            "label": "Actions"
+        },
+        {
+            "fieldname": "send_email",
+            "fieldtype": "Button",
+            "label": "Send Email"
+        },
+        {
+            "fieldname": "clear_fields",
+            "fieldtype": "Button",
+            "label": "Clear"
+        }
+    ],
+    "issingle": 1,
+    "links": [],
+    "modified": "2025-12-15 00:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Genmedai",
+    "name": "Compose Email",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

@@ -1,168 +1,168 @@
 {
-    "actions": [],
-    "allow_import": 1,
-    "autoname": "field:brand_name",
-    "creation": "2024-12-08 16:35:00.000000",
-    "doctype": "DocType",
-    "engine": "InnoDB",
-    "field_order": [
-        "source_id",
-        "brand_name",
-        "type",
-        "is_discontinued",
-        "manufacturer_name",
-        "section_break_details",
-        "salt_composition",
-        "short_composition1",
-        "short_composition2",
-        "strength",
-        "dosage_form",
-        "pack_size_label",
-        "section_break_price",
-        "price",
-        "is_generic",
-        "section_break_image",
-        "image",
-        "description"
-    ],
-    "fields": [
-        {
-            "fieldname": "source_id",
-            "fieldtype": "Data",
-            "hidden": 1,
-            "label": "id",
-            "read_only": 1
-        },
-        {
-            "fieldname": "brand_name",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "name",
-            "reqd": 1,
-            "search_index": 1,
-            "unique": 1
-        },
-        {
-            "fieldname": "type",
-            "fieldtype": "Data",
-            "label": "type"
-        },
-        {
-            "default": "0",
-            "fieldname": "is_discontinued",
-            "fieldtype": "Check",
-            "label": "Is_discontinued"
-        },
-        {
-            "fieldname": "manufacturer_name",
-            "fieldtype": "Data",
-            "label": "manufacturer_name"
-        },
-        {
-            "fieldname": "section_break_details",
-            "fieldtype": "Section Break"
-        },
-        {
-            "fieldname": "salt_composition",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "salt_composition",
-            "search_index": 1
-        },
-        {
-            "fieldname": "short_composition1",
-            "fieldtype": "Data",
-            "label": "short_composition1"
-        },
-        {
-            "fieldname": "short_composition2",
-            "fieldtype": "Data",
-            "label": "short_composition2"
-        },
-        {
-            "fieldname": "strength",
-            "fieldtype": "Data",
-            "label": "strength",
-            "in_list_view": 1
-        },
-        {
-            "fieldname": "dosage_form",
-            "fieldtype": "Select",
-            "label": "dosage_form",
-            "options": "Tablet\nSyrup\nInjection\nCapsule\nCream\nGel\nDrops\nInhaler\nPowder\nSachet"
-        },
-        {
-            "fieldname": "pack_size_label",
-            "fieldtype": "Data",
-            "label": "pack_size_label"
-        },
-        {
-            "fieldname": "section_break_price",
-            "fieldtype": "Section Break"
-        },
-        {
-            "fieldname": "price",
-            "fieldtype": "Currency",
-            "label": "price(₹)",
-            "reqd": 1
-        },
-        {
-            "default": "0",
-            "fieldname": "is_generic",
-            "fieldtype": "Check",
-            "label": "is_generic"
-        },
-        {
-            "fieldname": "section_break_image",
-            "fieldtype": "Section Break"
-        },
-        {
-            "fieldname": "image",
-            "fieldtype": "Attach Image",
-            "label": "image"
-        },
-        {
-            "fieldname": "description",
-            "fieldtype": "Text Editor",
-            "label": "description"
-        }
-    ],
-    "index_web_pages_for_search": 1,
-    "links": [],
-    "modified": "2024-12-08 16:35:00.000000",
-    "modified_by": "Administrator",
-    "module": "GenMedAI",
-    "name": "Medicine",
-    "naming_rule": "By fieldname",
-    "owner": "Administrator",
-    "permissions": [
-        {
-            "create": 1,
-            "delete": 1,
-            "email": 1,
-            "export": 1,
-            "import": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "System Manager",
-            "share": 1,
-            "write": 1
-        },
-        {
-            "read": 1,
-            "role": "GenMedAI Member"
-        },
-        {
-            "read": 1,
-            "role": "All"
-        },
-        {
-            "read": 1,
-            "role": "Guest"
-        }
-    ],
-    "sort_field": "modified",
-    "sort_order": "DESC",
-    "states": []
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "field:brand_name",
+ "creation": "2024-12-08 16:35:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "source_id",
+  "brand_name",
+  "type",
+  "is_discontinued",
+  "manufacturer_name",
+  "section_break_details",
+  "salt_composition",
+  "short_composition1",
+  "short_composition2",
+  "strength",
+  "dosage_form",
+  "pack_size_label",
+  "section_break_price",
+  "price",
+  "is_generic",
+  "section_break_image",
+  "image",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "source_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "id",
+   "read_only": 1
+  },
+  {
+   "fieldname": "brand_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Data",
+   "label": "type"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_discontinued",
+   "fieldtype": "Check",
+   "label": "Is_discontinued"
+  },
+  {
+   "fieldname": "manufacturer_name",
+   "fieldtype": "Data",
+   "label": "manufacturer_name"
+  },
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "salt_composition",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "salt_composition",
+   "search_index": 1
+  },
+  {
+   "fieldname": "short_composition1",
+   "fieldtype": "Data",
+   "label": "short_composition1"
+  },
+  {
+   "fieldname": "short_composition2",
+   "fieldtype": "Data",
+   "label": "short_composition2"
+  },
+  {
+   "fieldname": "strength",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "strength"
+  },
+  {
+   "fieldname": "dosage_form",
+   "fieldtype": "Select",
+   "label": "dosage_form",
+   "options": "Tablet\nSyrup\nInjection\nCapsule\nCream\nGel\nDrops\nInhaler\nPowder\nSachet"
+  },
+  {
+   "fieldname": "pack_size_label",
+   "fieldtype": "Data",
+   "label": "pack_size_label"
+  },
+  {
+   "fieldname": "section_break_price",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "label": "price(\u20b9)",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_generic",
+   "fieldtype": "Check",
+   "label": "is_generic"
+  },
+  {
+   "fieldname": "section_break_image",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "image"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "description"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-14 23:57:29.269478",
+ "modified_by": "Administrator",
+ "module": "GenMedAI",
+ "name": "Medicine",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "GenMedAI Member",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "All"
+  },
+  {
+   "read": 1,
+   "role": "Guest"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
 }

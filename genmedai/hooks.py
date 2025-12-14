@@ -69,6 +69,10 @@ home_page = "frontend"
 # Generators
 # ----------
 
+fixtures = [
+    {"dt": "Custom HTML Block"}
+]
+
 # automatically create page for each record of this doctype
 # website_generators = ["Web Page"]
 

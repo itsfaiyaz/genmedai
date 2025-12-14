@@ -429,7 +429,13 @@ def translate_text(text, target_language="Hindi"):
 @frappe.whitelist(allow_guest=True)
 def get_contact_us_settings():
     """Fetch Contact Us Settings for public display."""
-    return frappe.get_doc("Contact Us Settings", "Contact Us Settings")
+    # Force ignore permissions to ensure guests can read these settings
+    original_ignore_permissions = frappe.flags.ignore_permissions
+    frappe.flags.ignore_permissions = True
+    try:
+        return frappe.get_doc("Contact Us Settings", "Contact Us Settings")
+    finally:
+        frappe.flags.ignore_permissions = original_ignore_permissions
 
 @frappe.whitelist(allow_guest=True)
 def has_desk_access():
