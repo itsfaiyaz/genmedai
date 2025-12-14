@@ -428,15 +428,22 @@ def translate_text(text, target_language="Hindi"):
 
 @frappe.whitelist(allow_guest=True)
 def get_contact_us_settings():
-    """Fetch Contact Us Settings for public display."""
+    """Fetch Contact Us Settings for public display safely."""
     try:
-        # Use simple get_doc for Single DocType. ignore_permissions=True to ensure guests can view it
-        # regardless of strict Role Permission Manager settings (matches previous intent).
-        doc = frappe.get_doc("Contact Us Settings")
-        return doc
+        # Fetch individual values directly from DB to avoid DocType file dependency crashes
+        # if the DocType files are missing from the filesystem but data exists in DB.
+        fields = ["heading", "introduction", "email_id", "phone", 
+                  "address_title", "address_line1", "address_line2", 
+                  "city", "state", "pincode", "country", 
+                  "query_options", "forward_to_email"]
+        
+        settings = {}
+        for field in fields:
+            settings[field] = frappe.db.get_single_value("Contact Us Settings", field)
+            
+        return settings
     except Exception as e:
         frappe.log_error(f"Error fetching Contact Us Settings: {str(e)}")
-        # Return simplified object or None to avoid 417 on frontend
         return None
 
 @frappe.whitelist(allow_guest=True)
@@ -451,6 +458,7 @@ def has_desk_access():
     # "System User" type is the standard definition for Desk Access in Frappe
     user_type = frappe.db.get_value("User", user, "user_type")
     return {"allowed": user_type == "System User"}
+
 from genmedai.emails.admin_notification import get_admin_email_content
 from genmedai.emails.user_reply import get_user_reply_content
 
@@ -459,9 +467,8 @@ def submit_contact_query(email, message, query_type="Other"):
     if not email or not message:
         frappe.throw("Email and Message are required")
 
-    # 1. Fetch Settings
-    settings = frappe.get_doc("Contact Us Settings", "Contact Us Settings")
-    forward_email = settings.forward_to_email
+    # 1. Fetch Settings safely
+    forward_email = frappe.db.get_single_value("Contact Us Settings", "forward_to_email")
     
     if not forward_email:
         frappe.throw("Contact configuration missing (Forward Email not set).")
