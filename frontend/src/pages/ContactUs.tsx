@@ -1,79 +1,49 @@
-import { Mail, Phone, MapPin, Send, Loader2, CheckCircle, RefreshCw } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Mail, Phone, MapPin, Send, Loader2, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useFrappeGetCall, useFrappePostCall } from 'frappe-react-sdk';
 
 const ContactUs = () => {
     // Fetch settings via public API to allow guests
     // Using getCall handles the loading state immediately on mount vs postCall which has a delay
-    const { data: settingsResult, isLoading: isSettingsLoading, error: settingsError, mutate } = useFrappeGetCall('genmedai.api.get_contact_us_settings');
+    const { data: settingsResult, isLoading: isSettingsLoading } = useFrappeGetCall('genmedai.api.get_contact_us_settings');
 
     // Form state
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [queryType, setQueryType] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
-    const [retryCount, setRetryCount] = useState(0);
-
-    // Auto-retry logic for fetching settings
-    useEffect(() => {
-        if (settingsError && retryCount < 5) {
-            const timer = setTimeout(() => {
-                setRetryCount(prev => prev + 1);
-                mutate();
-            }, 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [settingsError, retryCount, mutate]);
 
     // API Call for submission
     const { call: submitQuery, loading: isSubmitting } = useFrappePostCall('genmedai.api.submit_contact_query');
 
-    const settings = settingsResult?.message; // API returns the doc directly, usually wrapped in message
+    // Fallback settings to ensure page always loads even if API fails
+    const settings = settingsResult?.message || {
+        heading: 'Get in Touch',
+        introduction: "We'd love to hear from you. Whether you have a question about using GenMedAI or need technical support, our team is ready to help.",
+        query_options: "General Inquiry\nTechnical Support\nFeedback\nOther",
+        email_id: "admin@ontu.in",
+        phone: "9122331261",
+        address_title: "Official Address",
+        address_line1: "Ontu Technologies",
+        address_line2: "Infront of R.K. Palace, Main Road",
+        city: "Pakur",
+        state: "Jharkhand",
+        pincode: "816107",
+        country: "India",
+        forward_to_email: "admin@ontu.in"
+    };
 
     // Parse query options
     const queryOptions = settings?.query_options
         ? settings.query_options.split('\n').filter((o: string) => o.trim())
-        : ['General Inquiry'];
+        : ['General Inquiry', 'Technical Support', 'Feedback', 'Other'];
 
     // If settings not loaded (and not yet fetched), show loader
     if (isSettingsLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
                 <Loader2 className="h-8 w-8 animate-spin text-brand-teal" />
-            </div>
-        );
-    }
-
-    if (settingsError || (!settings && !isSettingsLoading)) {
-        // Settings fetch returned empty/null or failed
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950">
-                <div className="text-center p-8">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Contact Unavailable</h1>
-                    <p className="text-gray-500 mb-6">Could not load contact settings. Please try again later.</p>
-                    <button
-                        onClick={() => {
-                            setRetryCount(0);
-                            mutate();
-                        }}
-                        className="inline-flex items-center gap-2 px-6 py-2 bg-brand-teal text-white font-medium rounded-lg hover:bg-brand-teal/90 transition-colors"
-                    >
-                        <RefreshCw className="w-4 h-4" />
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    if (!settings?.forward_to_email) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950">
-                <div className="text-center p-8">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Contact Unavailable</h1>
-                    <p className="text-gray-500">The contact form is currently disabled.</p>
-                </div>
             </div>
         );
     }
