@@ -4,12 +4,41 @@
     "doctype": "DocType",
     "engine": "InnoDB",
     "field_order": [
+        "website_settings_section",
+        "enable_splash_screen",
+        "splash_media",
+        "splash_duration",
         "ai_settings_section",
         "ai_provider",
         "gemini_api_key",
         "openai_api_key"
     ],
     "fields": [
+        {
+            "fieldname": "website_settings_section",
+            "fieldtype": "Section Break",
+            "label": "Website Settings"
+        },
+        {
+            "fieldname": "enable_splash_screen",
+            "fieldtype": "Check",
+            "label": "Enable Splash Screen"
+        },
+        {
+            "depends_on": "eval:doc.enable_splash_screen",
+            "fieldname": "splash_media",
+            "fieldtype": "Attach",
+            "label": "Splash Screen Media",
+            "description": "Upload image or video (mp4). If empty, the default GenMedAI intro video will be used."
+        },
+        {
+            "default": "2.0",
+            "depends_on": "eval:doc.enable_splash_screen",
+            "fieldname": "splash_duration",
+            "fieldtype": "Float",
+            "label": "Splash Duration (Seconds)",
+            "description": "Duration in seconds (e.g. 2.0). If video, it auto-closes on end, but this acts as a max fallback."
+        },
         {
             "fieldname": "ai_settings_section",
             "fieldtype": "Section Break",

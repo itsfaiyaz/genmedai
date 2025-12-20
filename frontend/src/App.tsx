@@ -1,5 +1,7 @@
-import { FrappeProvider } from 'frappe-react-sdk';
+import { useState } from 'react';
+import { FrappeProvider, useFrappeGetDoc } from 'frappe-react-sdk';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Login from './pages/auth/Login';
@@ -20,15 +22,37 @@ import Search from './pages/Search';
 
 import NotFound from './pages/NotFound';
 import { ThemeProvider } from './components/theme-provider';
+import SplashScreen from './components/SplashScreen';
 
-function App() {
-  const enableSocket = import.meta.env.VITE_ENABLE_SOCKET === 'true';
-  const siteName = import.meta.env.VITE_SITE_NAME;
+const AppContent = () => {
+  const { data: settings } = useFrappeGetDoc('GenMedAI Settings', 'GenMedAI Settings');
+
+  const [showSplash, setShowSplash] = useState(() => {
+    return !sessionStorage.getItem('hasSeenSplash');
+  });
+
+  // If settings loaded and splash is disabled (0), hide it immediately
+  if (settings && settings.enable_splash_screen === 0 && showSplash) {
+    setShowSplash(false);
+  }
+
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+    sessionStorage.setItem('hasSeenSplash', 'true');
+  };
+
+  const splashMedia = settings?.splash_media;
+  const splashDuration = settings?.splash_duration;
+
+  // Wait for settings to load if showSplash is true, else we might show it when disabled
+  // However, simpler is to just render. if disabled, it will immediately unmount.
 
   return (
-    <FrappeProvider enableSocket={enableSocket} siteName={siteName}>
-      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <BrowserRouter basename={import.meta.env.DEV ? '/' : (window.location.pathname.startsWith('/frontend') ? '/frontend' : '/')}>
+    <AnimatePresence mode="wait">
+      {showSplash && (settings?.enable_splash_screen !== 0) ? (
+        <SplashScreen key="splash" onComplete={handleSplashComplete} mediaUrl={splashMedia} duration={splashDuration} />
+      ) : (
+        <BrowserRouter key="router" basename={import.meta.env.DEV ? '/' : (window.location.pathname.startsWith('/frontend') ? '/frontend' : '/')}>
           <Routes>
             <Route element={<Layout />}>
               <Route path="/login" element={<Login />} />
@@ -53,6 +77,19 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function App() {
+  const enableSocket = import.meta.env.VITE_ENABLE_SOCKET === 'true';
+  const siteName = import.meta.env.VITE_SITE_NAME;
+
+  return (
+    <FrappeProvider enableSocket={enableSocket} siteName={siteName}>
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <AppContent />
       </ThemeProvider>
     </FrappeProvider>
   );
