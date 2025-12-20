@@ -83,6 +83,7 @@ const Navbar = () => {
 
     const defaultNavItems = [
         { name: 'Home', path: '/' },
+        { name: 'Medicines', path: '/medicines' },
         { name: 'Search', path: '/search' },
         { name: 'About', path: '/about' },
         { name: 'Contact', path: '/contact' },

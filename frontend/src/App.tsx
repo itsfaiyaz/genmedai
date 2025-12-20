@@ -14,6 +14,7 @@ import HowItWorks from './pages/HowItWorks';
 import FAQs from './pages/FAQs';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import Medicines from './pages/Medicines';
 
 import Search from './pages/Search';
 
@@ -41,6 +42,7 @@ function App() {
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/my-account" element={<MyAccount />} />
               <Route path="/search" element={<Search />} />
+              <Route path="/medicines" element={<Medicines />} />
 
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/faqs" element={<FAQs />} />

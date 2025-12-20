@@ -508,3 +508,106 @@ def submit_contact_query(email, message, query_type="Other"):
     )
     
     return {"status": "success", "message": "Your message has been sent successfully."}
+
+@frappe.whitelist(allow_guest=True)
+def browse_medicines(start=0, limit=20, search_text=None, manufacturer=None, dosage_form=None, has_image=None, order_by='modified desc'):
+    start = int(start)
+    limit = int(limit)
+    
+    conditions = []
+    values = []
+    
+    # Base condition: Not cancelled
+    conditions.append("docstatus < 2")
+    
+    # 1. Strict Filters
+    if manufacturer:
+        conditions.append("manufacturer_name = %s")
+        values.append(manufacturer)
+    
+    if dosage_form:
+        conditions.append("dosage_form = %s")
+        values.append(dosage_form)
+
+    if has_image and str(has_image).lower() in ['true', '1', 'yes']:
+        conditions.append("(image IS NOT NULL AND image != '')")
+    
+    # Debug: Check Clavsar specifically
+    debug_check = frappe.db.sql("""
+        SELECT name, image FROM `tabMedicine` 
+        WHERE brand_name LIKE '%Clavsar%'
+    """, as_dict=True)
+    if debug_check:
+        frappe.log_error(f"Debug Clavsar Image: {debug_check}", "Medicines Debug")
+
+        
+    # 2. Search Logic
+    if search_text:
+        # Search multiple fields using OR
+        search_term = f"%{search_text}%"
+        conditions.append("(brand_name LIKE %s OR salt_composition LIKE %s OR manufacturer_name LIKE %s)")
+        values.extend([search_term, search_term, search_term])
+        
+    where_clause = " AND ".join(conditions)
+    
+    # Validate order_by to prevent SQL injection
+    valid_sort_fields = ['name', 'brand_name', 'price', 'modified', 'creation', 'salt_composition', 'strength']
+    sort_field = order_by.split(' ')[0]
+    if sort_field not in valid_sort_fields:
+        order_by = 'modified desc'
+        
+    sql_query = f"""
+        SELECT 
+            name, brand_name, salt_composition, short_composition1, 
+            dosage_form, manufacturer_name, price, is_generic, 
+            image, is_discontinued, pack_size_label, modified, creation, description
+        FROM `tabMedicine`
+        WHERE {where_clause}
+        ORDER BY {order_by}
+        LIMIT %s, %s
+    """
+    
+    values.extend([start, limit])
+    
+    medicines = frappe.db.sql(sql_query, tuple(values), as_dict=True)
+    
+    # Post-processing
+    for m in medicines:
+        if not m.get('dosage_form') and m.get('type'):
+            m['dosage_form'] = m['type']
+        m['is_discontinued'] = 1 if m.get('is_discontinued') else 0
+        
+        # Fallback for safe frontend handling
+        m['affiliate_link'] = None
+        
+    return medicines
+
+@frappe.whitelist(allow_guest=True)
+def get_catalog_filters():
+    # Efficiently fetch distinct values for filters
+    # Limit to top 500 active manufacturers to avoid freezing
+    
+    manufacturers = frappe.db.sql("""
+        SELECT DISTINCT manufacturer_name 
+        FROM `tabMedicine` 
+        WHERE manufacturer_name IS NOT NULL AND manufacturer_name != ''
+        ORDER BY manufacturer_name ASC 
+        LIMIT 1000
+    """, as_dict=True)
+    
+    # Limit list size in python if needed or keep full list if < few thousands. 
+    # For 3 lakhs rows, distinct manufacturers might be 5k-10k. 
+    # Sending 5k strings is ~100KB gzipped. It's acceptable for a "catalog app".
+    
+    dosage_forms = frappe.db.sql("""
+        SELECT DISTINCT dosage_form 
+        FROM `tabMedicine` 
+        WHERE dosage_form IS NOT NULL AND dosage_form != ''
+        ORDER BY dosage_form ASC 
+        LIMIT 1000
+    """, as_dict=True)
+    
+    return {
+        "manufacturers": [m.manufacturer_name for m in manufacturers],
+        "dosage_forms": [d.dosage_form for d in dosage_forms]
+    }
