@@ -9,10 +9,10 @@ def after_migrate():
 def setup_defaults():
 	# Update Website Settings
 	website_settings = frappe.get_doc("Website Settings")
-	website_settings.app_logo = "/assets/genmedai/images/adiCloudFavicon.png"
-	website_settings.favicon = "/assets/genmedai/images/adiCloud.png"
-	website_settings.banner_image = "/assets/genmedai/images/adiCloudFavicon.png"
-	website_settings.splash_image = "/assets/genmedai/images/adiCloudlogo.png"
+	website_settings.app_logo = "/assets/genmedai/images/genmed_favicon.png"
+	website_settings.favicon = "/assets/genmedai/images/genmed_favicon.png"
+	website_settings.banner_image = "/assets/genmedai/images/genmed_favicon.png"
+	website_settings.splash_image = "/assets/genmedai/images/genmed_favicon.png"
 	website_settings.home_page = "frontend"
 	website_settings.app_name = "AdiCloud"
 	website_settings.save(ignore_permissions=True)
@@ -20,7 +20,7 @@ def setup_defaults():
 	# Update Navbar Settings (for Desk)
 	if frappe.db.exists("DocType", "Navbar Settings"):
 		navbar_settings = frappe.get_single("Navbar Settings")
-		navbar_settings.app_logo = "/assets/genmedai/images/adiCloud.png"
+		navbar_settings.app_logo = "/assets/genmedai/images/genmed_favicon.png"
 		navbar_settings.save(ignore_permissions=True)
 
 	# Update System Settings

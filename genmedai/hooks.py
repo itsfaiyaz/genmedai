@@ -5,7 +5,7 @@ app_description = "GenMedAI"
 app_email = "admin@adimyra.com"
 app_license = "agpl-3.0"
 
-app_logo_url = "/assets/genmedai/images/adiCloudFavicon.png"
+app_logo_url = "/assets/genmedai/images/genmed_favicon.png"
 
 # Apps
 # ------------------
