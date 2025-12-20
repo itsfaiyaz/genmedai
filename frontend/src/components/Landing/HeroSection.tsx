@@ -45,11 +45,12 @@ const HeroSection: React.FC = () => {
                                 Find Substitute Now
                             </button>
                             <button
-                                onClick={() => scrollToSection('upload-prescription-section')}
-                                className="px-8 py-4 rounded-full bg-brand-slate dark:bg-gray-800 text-white font-bold text-lg shadow-lg hover:bg-brand-navy dark:hover:bg-gray-700 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                                onClick={() => scrollToSection('auto-prescription-card')}
+                                className="px-8 py-4 rounded-full border-2 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 font-bold text-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 flex items-center justify-center cursor-pointer group"
                             >
-                                <Upload size={20} className="mr-2" />
+                                <Upload size={20} className="mr-2 group-hover:scale-110 transition-transform" />
                                 Upload Prescription
+                                <span className="ml-2 text-[10px] uppercase tracking-wider bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded text-gray-400">Soon</span>
                             </button>
                         </div>
 
