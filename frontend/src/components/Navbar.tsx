@@ -1,6 +1,6 @@
 import { useFrappeAuth, useFrappeGetDoc, useFrappePostCall } from 'frappe-react-sdk';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { LogOut, Menu, X, ChevronDown, LayoutDashboard, Settings, Pill, User, Search } from 'lucide-react';
+import { LogOut, Menu, X, ChevronDown, LayoutDashboard, Settings, User, Search } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { ModeToggle } from './mode-toggle';
 
@@ -134,8 +134,8 @@ const Navbar = () => {
                     {/* Logo Section */}
                     <div className="flex items-center">
                         <Link to="/" className="flex-shrink-0 flex items-center gap-2 group">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center text-brand-teal dark:text-brand-teal bg-white dark:bg-gray-800">
-                                <Pill className="w-8 h-8 fill-current" />
+                            <div className="w-10 h-10 flex items-center justify-center">
+                                <img src="/assets/genmedai/images/genmed_favicon.png" alt="GenMedAI" className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col justify-center">
                                 <span className="font-extrabold text-2xl text-brand-navy dark:text-white tracking-tight leading-none">

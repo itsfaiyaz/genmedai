@@ -1,4 +1,4 @@
-import { Pill, Heart, Facebook, Twitter, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
+import { Heart, Facebook, Twitter, Instagram, Linkedin, Mail, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFrappeAuth, useFrappePostCall } from 'frappe-react-sdk';
 import { useEffect } from 'react';
@@ -25,8 +25,8 @@ const Footer = () => {
                     {/* Brand Section */}
                     <div className="space-y-6">
                         <div className="flex items-center gap-2">
-                            <div className="w-10 h-10 bg-brand-teal rounded-full flex items-center justify-center text-white font-bold text-xl shadow-sm">
-                                <Pill className="w-6 h-6 fill-current" />
+                            <div className="w-10 h-10 flex items-center justify-center">
+                                <img src="/assets/genmedai/images/genmed_favicon.png" alt="GenMedAI" className="w-full h-full object-contain" />
                             </div>
                             <span className="font-bold text-2xl tracking-tight text-white">GenMed<span className="text-brand-teal">AI</span></span>
                         </div>
