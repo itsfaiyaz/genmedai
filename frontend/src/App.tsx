@@ -31,8 +31,9 @@ const AppContent = () => {
     return !sessionStorage.getItem('hasSeenSplash');
   });
 
-  // If settings loaded and splash is disabled (0), hide it immediately
-  if (settings && settings.enable_splash_screen === 0 && showSplash) {
+  // If settings loaded and splash is disabled (0 or false), hide it immediately
+  // We check for not undefined/null to ensure we have data, then check if falsy
+  if (settings && (settings.enable_splash_screen == 0 || settings.enable_splash_screen === false) && showSplash) {
     setShowSplash(false);
   }
 
@@ -44,12 +45,14 @@ const AppContent = () => {
   const splashMedia = settings?.splash_media;
   const splashDuration = settings?.splash_duration;
 
-  // Wait for settings to load if showSplash is true, else we might show it when disabled
-  // However, simpler is to just render. if disabled, it will immediately unmount.
+  // Determine if splash should be active based on settings
+  // If settings are missing (loading or error), we default to showing it to prevent unstyled flash,
+  // unless showSplash is already false.
+  const isSplashEnabled = settings ? (settings.enable_splash_screen != 0 && settings.enable_splash_screen !== false) : true;
 
   return (
     <AnimatePresence mode="wait">
-      {showSplash && (settings?.enable_splash_screen !== 0) ? (
+      {showSplash && isSplashEnabled ? (
         <SplashScreen key="splash" onComplete={handleSplashComplete} mediaUrl={splashMedia} duration={splashDuration} />
       ) : (
         <BrowserRouter key="router" basename={import.meta.env.DEV ? '/' : (window.location.pathname.startsWith('/frontend') ? '/frontend' : '/')}>
