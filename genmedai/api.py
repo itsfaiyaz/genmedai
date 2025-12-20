@@ -531,15 +531,6 @@ def browse_medicines(start=0, limit=20, search_text=None, manufacturer=None, dos
 
     if has_image and str(has_image).lower() in ['true', '1', 'yes']:
         conditions.append("(image IS NOT NULL AND image != '')")
-    
-    # Debug: Check Clavsar specifically
-    debug_check = frappe.db.sql("""
-        SELECT name, image FROM `tabMedicine` 
-        WHERE brand_name LIKE '%Clavsar%'
-    """, as_dict=True)
-    if debug_check:
-        frappe.log_error(f"Debug Clavsar Image: {debug_check}", "Medicines Debug")
-
         
     # 2. Search Logic
     if search_text:
